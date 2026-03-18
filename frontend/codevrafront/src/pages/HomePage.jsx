@@ -8,7 +8,7 @@ import ClientMode from '../components/ClientMode';
 import DeveloperMode from '../components/DeveloperMode';
 
 export default function HomePage() {
-  const [mode, setMode] = useState(null);
+  const [mode, setMode] = useState('client');
 
   return (
     <div className="relative">
@@ -74,8 +74,7 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {!mode && (
-            <motion.div
+          <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
@@ -98,7 +97,6 @@ export default function HomePage() {
                 </Button>
               </Link>
             </motion.div>
-          )}
 
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -159,8 +157,7 @@ export default function HomePage() {
         {mode === 'developer' && <DeveloperMode key="developer" />}
       </AnimatePresence>
 
-      {!mode && (
-        <section className="relative py-20 px-4">
+      <section className="relative py-20 px-4">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -188,7 +185,6 @@ export default function HomePage() {
             </motion.div>
           </div>
         </section>
-      )}
     </div>
   );
 }
