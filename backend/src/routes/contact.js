@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
     const contact = await ContactMessage.create({ name: name.trim(), email: email.toLowerCase(), subject: subject.trim(), message: message.trim() });
     // Send emails (non-blocking — don't fail the request if email fails)
     sendContactEmails({ name: name.trim(), email: email.toLowerCase(), subject: subject.trim(), message: message.trim() })
-      .catch(err => console.error('Mailer error:', err.message));
+      .catch(err => console.error('[mailer] Failed to send email:', err.message, err.response || ''));
     res.status(201).json({ message: 'Message sent successfully', id: contact._id });
   } catch (error) {
     res.status(500).json({ error: 'Failed to send message' });

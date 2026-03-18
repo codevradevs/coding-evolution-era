@@ -1,5 +1,9 @@
 const nodemailer = require('nodemailer');
 
+if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+  console.warn('[mailer] WARNING: GMAIL_USER or GMAIL_APP_PASSWORD not set — emails will not be sent.');
+}
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {

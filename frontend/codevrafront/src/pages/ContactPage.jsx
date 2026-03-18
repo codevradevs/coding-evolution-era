@@ -4,6 +4,7 @@ import { Button } from '../components/ui/Button';
 import { Mail, Briefcase, Send, MessageSquare, Clock, DollarSign, FileText, CheckCircle, Phone, Instagram, Facebook, Github, Shield, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { contactApi } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 
 const TikTokIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
@@ -35,9 +36,10 @@ const faqs = [
 
 export default function ContactPage() {
   const location = useLocation();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('intake');
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [intakeData, setIntakeData] = useState({ name: '', email: '', projectType: '', budget: '', timeline: '', description: '' });
+  const [intakeData, setIntakeData] = useState({ name: user?.name || '', email: user?.email || '', projectType: '', budget: '', timeline: '', description: '' });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
