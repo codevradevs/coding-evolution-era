@@ -60,7 +60,7 @@ export default function ProductsPage() {
 
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/products/categories');
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/products/categories`);
       setCategories(['All', ...data]);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -70,7 +70,7 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get('http://localhost:5000/api/products', {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/products`, {
         params: { category: selectedCategory, page: currentPage, limit: 12, search: searchQuery }
       });
       setProducts(data.products);

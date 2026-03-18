@@ -25,7 +25,7 @@ export default function BlogsPage() {
 
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/blogs/categories');
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/blogs/categories`);
       setCategories(['All Posts', ...data]);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -35,7 +35,7 @@ export default function BlogsPage() {
   const fetchBlogs = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get('http://localhost:5000/api/blogs', {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/blogs`, {
         params: { category: selectedCategory, page: currentPage, limit: 12, search: searchQuery }
       });
       setBlogs(data.blogs);
