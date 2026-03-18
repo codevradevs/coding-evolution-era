@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom';
-import {
-  Github, Twitter, Linkedin, Mail, Heart, ExternalLink
-} from 'lucide-react';
+import { Github, Twitter, Mail, Heart, ExternalLink, Instagram, Facebook, Phone } from 'lucide-react';
 import logo from '../../logo.png';
+
+const TikTokIcon = () => (
+  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
+  </svg>
+);
 
 const footerSections = [
   {
@@ -31,15 +35,18 @@ const footerSections = [
       { label: 'Security Blog', href: '/blog?category=security' },
       { label: 'Build Logs', href: '/blog?category=build-logs' },
       { label: 'API Docs', href: '/docs' },
-      { label: 'Open Source', href: 'https://github.com/codevra', external: true },
+      { label: 'Open Source', href: 'https://github.com/codevradevs', external: true },
     ],
   },
 ];
 
 const socialLinks = [
-  { icon: Github, href: 'https://github.com/codevra', label: 'GitHub' },
-  { icon: Twitter, href: 'https://twitter.com/codevra', label: 'Twitter' },
-  { icon: Mail, href: 'mailto:hello@codevra.dev', label: 'Email' },
+  { icon: Github, href: 'https://github.com/codevradevs', label: 'GitHub' },
+  { icon: Twitter, href: 'https://x.com/codevradevs', label: 'X' },
+  { icon: Instagram, href: 'https://instagram.com/codevra_solutions', label: 'Instagram' },
+  { icon: Facebook, href: 'https://facebook.com/codevradevs', label: 'Facebook' },
+  { icon: TikTokIcon, href: 'https://tiktok.com/@codevradevs', label: 'TikTok' },
+  { icon: Mail, href: 'mailto:codevradevs@gmail.com', label: 'Email' },
 ];
 
 export default function Footer() {
@@ -55,9 +62,13 @@ export default function Footer() {
               Integrated Digital Solutions for Kenyan Businesses. We build intelligent and secure systems for Kenyan businesses.
             </p>
             <div className="space-y-2 mb-6">
-              <a href="mailto:hello@codevra.dev" className="flex items-center gap-2 text-sm text-dark-400 hover:text-brand-400 transition-colors">
+              <a href="mailto:codevradevs@gmail.com" className="flex items-center gap-2 text-sm text-dark-400 hover:text-brand-400 transition-colors">
                 <Mail className="w-4 h-4" />
-                hello@codevra.dev
+                codevradevs@gmail.com
+              </a>
+              <a href="https://wa.me/254140710690" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-dark-400 hover:text-brand-400 transition-colors">
+                <Phone className="w-4 h-4" />
+                +254 140 710 690
               </a>
               <p className="text-sm text-dark-400">Nairobi, Kenya</p>
             </div>
