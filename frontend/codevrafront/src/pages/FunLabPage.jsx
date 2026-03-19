@@ -63,6 +63,26 @@ const playgrounds = [
     href: '/fun-lab/chaos',
     emoji: '💥',
     status: 'live'
+  },
+  {
+    id: 'code-puzzle',
+    title: 'Code Cleanup',
+    description: 'Fix broken code before time runs out',
+    icon: Code2,
+    color: 'accent',
+    href: '/fun-lab/code-puzzle',
+    emoji: '🔧',
+    status: 'live'
+  },
+  {
+    id: 'image-puzzle',
+    title: 'Code Puzzle',
+    description: 'Drag code pieces into the right order',
+    icon: Gamepad2,
+    color: 'brand',
+    href: '/fun-lab/image-puzzle',
+    emoji: '🧩',
+    status: 'live'
   }
 ];
 
@@ -112,7 +132,7 @@ export default function FunLabPage() {
             className="flex items-center justify-center gap-6 mb-16"
           >
             <div className="glass rounded-lg px-4 py-2">
-              <span className="text-2xl font-bold gradient-text">6</span>
+              <span className="text-2xl font-bold gradient-text">8</span>
               <span className="text-sm text-dark-400 ml-2">Playgrounds</span>
             </div>
             <div className="glass rounded-lg px-4 py-2">

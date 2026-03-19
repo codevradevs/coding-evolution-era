@@ -22,22 +22,29 @@ export default function AuthCallbackPage() {
     if (token && refresh) {
       localStorage.setItem('accessToken', token);
       localStorage.setItem('refreshToken', refresh);
-      
-      // Fetch user data
-      fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-        .then(res => res.json())
-        .then(user => {
-          setUser(user);
-          localStorage.setItem('user', JSON.stringify(user));
+
+      const base = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api$/, '');
+      const headers = { 'Authorization': `Bearer ${token}` };
+
+      Promise.all([
+        fetch(`${base}/api/auth/me`, { headers }).then(r => r.json()),
+        fetch(`${base}/api/profile`, { headers }).then(r => r.json()),
+      ])
+        .then(([me, profileData]) => {
+          // /api/auth/me returns raw mongo doc (_id), /api/profile returns { user, profile, stats, ... }
+          const u = profileData?.user || me;
+          const shaped = {
+            id: u._id || u.id,
+            name: u.name,
+            email: u.email,
+            role: u.role,
+            avatar: profileData?.profile?.avatar || u.avatar || null,
+          };
+          setUser(shaped);
+          localStorage.setItem('user', JSON.stringify(shaped));
           navigate('/');
         })
-        .catch(() => {
-          navigate('/auth/login');
-        });
+        .catch(() => navigate('/auth/login'));
     } else {
       navigate('/auth/login');
     }

@@ -21,6 +21,8 @@ import AnimationLabPage from './pages/AnimationLabPage';
 import CodeBattlePage from './pages/CodeBattlePage';
 import CyberSimulatorPage from './pages/CyberSimulatorPage';
 import LogicPuzzlesPage from './pages/LogicPuzzlesPage';
+import CodePuzzlePage from './pages/CodePuzzlePage';
+import ImagePuzzlePage from './pages/ImagePuzzlePage';
 import ChaosModePage from './pages/ChaosModePage';
 import DocsPage from './pages/DocsPage';
 import ProfilePage from './pages/ProfilePage';
@@ -58,6 +60,8 @@ function App() {
               <Route path="/fun-lab/code" element={<CodeBattlePage />} />
               <Route path="/fun-lab/cyber" element={<CyberSimulatorPage />} />
               <Route path="/fun-lab/games" element={<LogicPuzzlesPage />} />
+              <Route path="/fun-lab/code-puzzle" element={<CodePuzzlePage />} />
+              <Route path="/fun-lab/image-puzzle" element={<ImagePuzzlePage />} />
               <Route path="/fun-lab/chaos" element={<ChaosModePage />} />
               <Route path="/docs" element={<DocsPage />} />
               <Route path="/profile" element={<ProfilePage />} />

@@ -32,6 +32,12 @@ router.get('/', authMiddleware, async (req, res) => {
     let profile = await UserProfile.findOne({ userId: req.userId });
     if (!profile) profile = await UserProfile.create({ userId: req.userId });
 
+    // If profile has no avatar but user doc has one (OAuth), sync it
+    if (!profile.avatar && user.avatar) {
+      profile.avatar = user.avatar;
+      await profile.save();
+    }
+
     const certificates = await Certificate.find({ userId: req.userId }).sort({ awardedAt: -1 });
     const trackerItems = await TrackerItem.find({ userId: req.userId });
     const submissions = await Submission.find({ userId: req.userId }).sort({ submittedAt: -1 }).limit(10);

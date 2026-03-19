@@ -2,9 +2,14 @@ const crypto = require('crypto');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const QRCode = require('qrcode');
+const { v4: uuidv4 } = require('uuid');
 const passport = require('../config/passport');
 const { User } = require('../models');
 const { authMiddleware } = require('../middleware/auth');
+
+// In-memory QR sessions (keyed by sessionId)
+const qrSessions = {};
 
 const { sendPasswordResetEmail } = require('../utils/mailer');
 
@@ -28,7 +33,7 @@ router.post('/register', async (req, res) => {
     const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
 
     res.status(201).json({
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, avatar: user.avatar },
       accessToken,
       refreshToken,
     });
@@ -52,7 +57,7 @@ router.post('/login', async (req, res) => {
     const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
 
     res.json({
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, avatar: user.avatar },
       accessToken,
       refreshToken,
     });
@@ -135,6 +140,48 @@ router.post('/reset-password/:token', async (req, res) => {
     res.json({ message: 'Password reset successful' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to reset password' });
+  }
+});
+
+// QR Login — generate QR
+router.get('/qr/generate', async (req, res) => {
+  try {
+    const sessionId = uuidv4();
+    qrSessions[sessionId] = { status: 'pending', createdAt: Date.now() };
+    // Auto-expire after 2 minutes
+    setTimeout(() => { delete qrSessions[sessionId]; }, 2 * 60 * 1000);
+    const qrDataUrl = await QRCode.toDataURL(sessionId);
+    res.json({ sessionId, qr: qrDataUrl });
+  } catch {
+    res.status(500).json({ error: 'Failed to generate QR' });
+  }
+});
+
+// QR Login — poll status
+router.get('/qr/status/:sessionId', (req, res) => {
+  const session = qrSessions[req.params.sessionId];
+  if (!session) return res.status(404).json({ error: 'Session expired or not found' });
+  if (session.status === 'approved') {
+    const { accessToken, refreshToken } = session;
+    delete qrSessions[req.params.sessionId];
+    return res.json({ status: 'approved', accessToken, refreshToken });
+  }
+  res.json({ status: session.status });
+});
+
+// QR Login — approve (called from mobile/second device after scanning)
+router.post('/qr/approve', authMiddleware, async (req, res) => {
+  try {
+    const { sessionId } = req.body;
+    if (!sessionId || !qrSessions[sessionId]) return res.status(404).json({ error: 'Session not found or expired' });
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+    const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
+    qrSessions[sessionId] = { status: 'approved', accessToken, refreshToken };
+    res.json({ message: 'QR session approved' });
+  } catch {
+    res.status(500).json({ error: 'Failed to approve QR session' });
   }
 });
 

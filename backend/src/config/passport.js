@@ -34,6 +34,13 @@ passport.use(
             user.avatar = profile.photos[0]?.value;
             await user.save();
           }
+          // Seed avatar into UserProfile if not set
+          const { UserProfile } = require('../models');
+          await UserProfile.findOneAndUpdate(
+            { userId: user._id, avatar: { $in: [null, '', undefined] } },
+            { avatar: profile.photos[0]?.value },
+            { upsert: false }
+          );
           return done(null, user);
         }
 
@@ -44,7 +51,9 @@ passport.use(
           avatar: profile.photos[0]?.value,
           provider: 'google',
         });
-
+        // Create UserProfile with avatar
+        const { UserProfile: UP } = require('../models');
+        await UP.create({ userId: user._id, avatar: profile.photos[0]?.value }).catch(() => {});
         done(null, user);
       } catch (error) {
         done(error, null);
@@ -77,6 +86,13 @@ passport.use(
             user.avatar = profile.photos[0]?.value;
             await user.save();
           }
+          // Seed avatar into UserProfile if not set
+          const { UserProfile } = require('../models');
+          await UserProfile.findOneAndUpdate(
+            { userId: user._id, avatar: { $in: [null, '', undefined] } },
+            { avatar: profile.photos[0]?.value },
+            { upsert: false }
+          );
           return done(null, user);
         }
 
@@ -87,7 +103,9 @@ passport.use(
           avatar: profile.photos[0]?.value,
           provider: 'github',
         });
-
+        // Create UserProfile with avatar
+        const { UserProfile: UP } = require('../models');
+        await UP.create({ userId: user._id, avatar: profile.photos[0]?.value }).catch(() => {});
         done(null, user);
       } catch (error) {
         done(error, null);

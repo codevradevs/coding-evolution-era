@@ -137,7 +137,7 @@ export default function Navbar() {
                   className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-dark-300 hover:text-dark-100 hover:bg-dark-800/50 transition-all duration-200"
                 >
                   <User className="w-4 h-4" />
-                  {user.name.split(' ')[0]}
+                  {user.name?.split(' ')[0] ?? user.email?.split('@')[0] ?? 'Profile'}
                 </Link>
                 <button
                   onClick={handleLogout}

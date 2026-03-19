@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Code2, Mail, Lock, User, CheckCircle, Zap, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Shield, Code2, Mail, Lock, User, CheckCircle, Zap, Github, Eye, EyeOff, ArrowLeft, QrCode, Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
 import api from '../lib/api';
@@ -17,8 +17,66 @@ export default function AuthPage() {
   const [forgotMode, setForgotMode] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotSent, setForgotSent] = useState(false);
-  const { login, register } = useAuth();
+  const [showQR, setShowQR] = useState(false);
+  const [qrData, setQrData] = useState(null); // { qr, sessionId }
+  const [qrStatus, setQrStatus] = useState('idle'); // idle | loading | pending | approved | expired
+  const pollRef = useRef(null);
+  const { login, register, setUser } = useAuth();
   const navigate = useNavigate();
+
+  const BASE_URL = 'http://localhost:5000';
+  const API = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api$/, '');
+
+  // QR polling
+  useEffect(() => {
+    if (qrStatus === 'pending' && qrData?.sessionId) {
+      pollRef.current = setInterval(async () => {
+        try {
+          const res = await fetch(`${API}/api/auth/qr/status/${qrData.sessionId}`);
+          const data = await res.json();
+          if (data.status === 'approved') {
+            clearInterval(pollRef.current);
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
+            const meRes = await fetch(`${API}/api/auth/me`, { headers: { Authorization: `Bearer ${data.accessToken}` } });
+            const user = await meRes.json();
+            setUser(user);
+            localStorage.setItem('user', JSON.stringify(user));
+            navigate('/');
+          } else if (res.status === 404) {
+            clearInterval(pollRef.current);
+            setQrStatus('expired');
+          }
+        } catch { /* keep polling */ }
+      }, 2000);
+    }
+    return () => clearInterval(pollRef.current);
+  }, [qrStatus, qrData]);
+
+  const generateQR = async () => {
+    setQrStatus('loading');
+    setQrData(null);
+    try {
+      const res = await fetch(`${API}/api/auth/qr/generate`);
+      const data = await res.json();
+      setQrData(data);
+      setQrStatus('pending');
+    } catch {
+      setQrStatus('idle');
+    }
+  };
+
+  const openQR = () => {
+    setShowQR(true);
+    generateQR();
+  };
+
+  const closeQR = () => {
+    clearInterval(pollRef.current);
+    setShowQR(false);
+    setQrData(null);
+    setQrStatus('idle');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,11 +111,11 @@ export default function AuthPage() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/google`;
+    window.location.href = `${BASE_URL}/api/auth/google`;
   };
 
   const handleGithubLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/github`;
+    window.location.href = `${BASE_URL}/api/auth/github`;
   };
 
   return (
@@ -384,9 +442,17 @@ export default function AuthPage() {
                         <Github className="w-5 h-5" />
                         Continue with GitHub
                       </button>
+
+                      <button
+                        type="button"
+                        onClick={openQR}
+                        className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg bg-dark-800 hover:bg-dark-700 border border-dark-700 text-dark-100 font-medium text-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      >
+                        <QrCode className="w-5 h-5 text-brand-400" />
+                        Sign in with QR Code
+                      </button>
                     </div>
                   </motion.form>
-                </AnimatePresence>
                 )}
 
                 {/* Security Badge */}
@@ -396,12 +462,74 @@ export default function AuthPage() {
                   </p>
                 </div>
 
-
               </motion.div>
             </div>
           </motion.div>
         </div>
       </div>
+
+      {/* QR Modal */}
+      <AnimatePresence>
+        {showQR && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onClick={closeQR}
+          >
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative glass rounded-2xl p-8 max-w-sm w-full text-center border border-dark-700/50"
+            >
+              <h3 className="text-xl font-bold text-dark-100 mb-1">QR Code Login</h3>
+              <p className="text-sm text-dark-400 mb-6">
+                Scan this with your phone while already logged in to authenticate instantly
+              </p>
+
+              <div className="flex items-center justify-center mb-6">
+                {qrStatus === 'loading' && (
+                  <div className="w-48 h-48 flex items-center justify-center">
+                    <Loader2 className="w-10 h-10 text-brand-400 animate-spin" />
+                  </div>
+                )}
+                {qrStatus === 'pending' && qrData?.qr && (
+                  <div className="p-3 bg-white rounded-xl">
+                    <img src={qrData.qr} alt="QR Code" className="w-44 h-44" />
+                  </div>
+                )}
+                {qrStatus === 'expired' && (
+                  <div className="w-48 h-48 flex flex-col items-center justify-center gap-3">
+                    <p className="text-sm text-red-400">QR expired</p>
+                    <button onClick={generateQR} className="flex items-center gap-2 text-sm text-brand-400 hover:text-brand-300">
+                      <RefreshCw className="w-4 h-4" /> Generate new
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {qrStatus === 'pending' && (
+                <div className="flex items-center justify-center gap-2 text-sm text-dark-400 mb-4">
+                  <Loader2 className="w-4 h-4 animate-spin text-brand-400" />
+                  Waiting for scan... (expires in 2 min)
+                </div>
+              )}
+
+              <div className="p-3 rounded-lg bg-dark-900/50 border border-dark-700/30 text-xs text-dark-500 mb-4">
+                Open Codevra on your phone → Profile → Approve QR Login
+              </div>
+
+              <button onClick={closeQR} className="text-sm text-dark-500 hover:text-dark-300 transition-colors">
+                Cancel
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
