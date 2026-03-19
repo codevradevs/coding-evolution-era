@@ -110,13 +110,13 @@ export default function VaultPage() {
       <section className="relative px-4 pb-20">
         <div className="max-w-6xl mx-auto">
           {error && <p className="text-sm text-red-400 mb-4">{error}</p>}
-          <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-280px)] min-h-[500px]">
+          <div className="flex flex-col lg:flex-row gap-4 min-h-[500px] lg:h-[calc(100vh-280px)]">
             <div className="lg:w-64 shrink-0 flex flex-col gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-500" />
                 <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search notes..." className="w-full pl-10 pr-4 py-2.5 rounded-lg glass text-sm text-dark-100 placeholder:text-dark-500 focus:outline-none focus:ring-2 focus:ring-accent-500/30" />
               </div>
-              <div className="glass rounded-xl p-3 space-y-1">
+              <div className="glass rounded-xl p-3 flex lg:flex-col gap-1 overflow-x-auto">
                 {folders.map(folder => (
                   <button key={folder} onClick={() => setActiveFolder(folder)} className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${activeFolder === folder ? 'bg-accent-500/10 text-accent-400' : 'text-dark-400 hover:text-dark-200 hover:bg-dark-800/50'}`}>
                     <Folder className="w-3.5 h-3.5" />{folder}
@@ -128,7 +128,7 @@ export default function VaultPage() {
                 <Plus className="w-4 h-4" />New Note
               </Button>
             </div>
-            <div className="lg:w-72 shrink-0 glass rounded-xl overflow-hidden flex flex-col">
+            <div className="lg:w-72 shrink-0 glass rounded-xl overflow-hidden flex flex-col max-h-64 lg:max-h-none">
               <div className="p-3 border-b border-dark-700/50"><span className="text-xs font-semibold text-dark-500 uppercase">{filteredNotes.length} notes</span></div>
               <div className="flex-1 overflow-y-auto p-2 space-y-1">
                 {loading ? (

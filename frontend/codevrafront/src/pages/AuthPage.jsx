@@ -42,7 +42,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex overflow-hidden">
+    <div className="relative py-12 px-4 pb-0 self-start w-full">
       <div className="fixed inset-0 bg-dark-950" />
       <div className="fixed inset-0 bg-grid pointer-events-none opacity-20" />
       
@@ -57,7 +57,7 @@ export default function AuthPage() {
         className="fixed inset-0 pointer-events-none"
       />
 
-      <div className="relative w-full max-w-7xl mx-auto flex items-center justify-center px-4 py-12">
+      <div className="relative max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
           
           {/* Left Panel - Branding */}
@@ -121,12 +121,61 @@ export default function AuthPage() {
             </div>
           </motion.div>
 
+          {/* Left Panel - Mobile (below form) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="lg:hidden flex flex-col items-center text-center order-2"
+          >
+            <div className="space-y-6 w-full max-w-md">
+              <div className="flex items-center justify-center gap-3">
+                <div className="relative">
+                  <Shield className="w-10 h-10 text-brand-400" />
+                  <Code2 className="w-5 h-5 text-accent-400 absolute -bottom-1 -right-1" />
+                </div>
+                <span className="text-3xl font-bold gradient-text">Codevra</span>
+              </div>
+
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-dark-100">
+                  {isSignUp ? 'Join the Ecosystem' : 'Welcome Back'}
+                </h2>
+                <p className="text-dark-400 text-sm leading-relaxed">
+                  {isSignUp
+                    ? 'Build. Break. Reinvent. Access developer tools, secure vault, and coding challenges.'
+                    : 'Continue building secure systems and African tech futures.'}
+                </p>
+              </div>
+
+              <div className="space-y-2 text-left">
+                {[
+                  { icon: CheckCircle, text: 'Secure authentication' },
+                  { icon: CheckCircle, text: 'No spam, ever' },
+                  { icon: CheckCircle, text: 'End-to-end encrypted' },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 text-dark-300 text-sm">
+                    <item.icon className="w-4 h-4 text-brand-400 shrink-0" />
+                    <span>{item.text}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="glass rounded-xl p-4 font-mono text-sm text-left">
+                <div className="text-brand-400">$ codevra auth --secure</div>
+                <div className="text-dark-500 mt-1">✓ JWT with rotation</div>
+                <div className="text-dark-500">✓ bcrypt hashing</div>
+                <div className="text-dark-500">✓ Rate limiting enabled</div>
+              </div>
+            </div>
+          </motion.div>
+
           {/* Right Panel - Auth Form */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex items-center justify-center"
+            className="flex items-center justify-center order-1 lg:order-none"
           >
             <div className="w-full max-w-md">
               <motion.div
@@ -287,19 +336,7 @@ export default function AuthPage() {
                   </p>
                 </div>
 
-                {/* Mobile Branding */}
-                <div className="lg:hidden mt-8 pt-8 border-t border-dark-700/30">
-                  <div className="flex items-center justify-center gap-2 text-xs text-dark-500">
-                    <CheckCircle className="w-3 h-3" />
-                    <span>Secure</span>
-                    <span>•</span>
-                    <CheckCircle className="w-3 h-3" />
-                    <span>Encrypted</span>
-                    <span>•</span>
-                    <CheckCircle className="w-3 h-3" />
-                    <span>No spam</span>
-                  </div>
-                </div>
+
               </motion.div>
             </div>
           </motion.div>

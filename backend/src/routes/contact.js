@@ -11,7 +11,13 @@ router.post('/', async (req, res) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return res.status(400).json({ error: 'Invalid email format' });
     if (message.length > 5000) return res.status(400).json({ error: 'Message too long' });
-    const contact = await ContactMessage.create({ name: name.trim(), email: email.toLowerCase(), subject: subject.trim(), message: message.trim() });
+    const contact = await ContactMessage.create({
+      name: name.trim(),
+      email: email.toLowerCase(),
+      subject: subject.trim(),
+      message: message.trim(),
+      type: subject.trim().startsWith('Project Intake') ? 'intake' : 'contact',
+    });
     // Send emails (non-blocking — don't fail the request if email fails)
     sendContactEmails({ name: name.trim(), email: email.toLowerCase(), subject: subject.trim(), message: message.trim() })
       .catch(err => console.error('[mailer] Failed to send email:', err.message, err.response || ''));

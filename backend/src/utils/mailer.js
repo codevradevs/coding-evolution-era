@@ -15,8 +15,7 @@ const transporter = nodemailer.createTransport({
 async function sendContactEmails({ name, email, subject, message }) {
   const isIntake = subject?.startsWith('Project Intake');
 
-  // Notification to Codevra
-  await transporter.sendMail({
+  const notifyMail = transporter.sendMail({
     from: `"Codevra Contact" <${process.env.GMAIL_USER}>`,
     to: process.env.GMAIL_USER,
     subject: `📬 New ${isIntake ? 'Project Intake' : 'Message'}: ${subject}`,
@@ -37,10 +36,9 @@ async function sendContactEmails({ name, email, subject, message }) {
         <a href="mailto:${email}" style="background:#7c3aed;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-size:14px;">Reply to ${name}</a>
       </div>
     `,
-  });
+  }).catch(err => console.error('[mailer] Notify email failed:', err.message));
 
-  // Auto-reply to client
-  await transporter.sendMail({
+  const autoReply = transporter.sendMail({
     from: `"Codevra Devs" <${process.env.GMAIL_USER}>`,
     to: email,
     subject: `We received your message — Codevra Devs`,
@@ -56,7 +54,9 @@ async function sendContactEmails({ name, email, subject, message }) {
         <p style="color:#555;font-size:12px;">Codevra Devs · Nairobi, Kenya · <a href="https://codevra.vercel.app" style="color:#7c3aed;">codevra.vercel.app</a></p>
       </div>
     `,
-  });
+  }).catch(err => console.error('[mailer] Auto-reply email failed:', err.message));
+
+  await Promise.allSettled([notifyMail, autoReply]);
 }
 
 module.exports = { sendContactEmails };

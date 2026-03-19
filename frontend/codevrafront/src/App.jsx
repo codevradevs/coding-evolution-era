@@ -22,6 +22,7 @@ import CodeBattlePage from './pages/CodeBattlePage';
 import CyberSimulatorPage from './pages/CyberSimulatorPage';
 import LogicPuzzlesPage from './pages/LogicPuzzlesPage';
 import ChaosModePage from './pages/ChaosModePage';
+import DocsPage from './pages/DocsPage';
 import AuthPage from './pages/AuthPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
 import './index.css';

@@ -38,7 +38,7 @@ export default function ContactPage() {
   const location = useLocation();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('intake');
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({ name: user?.name || '', email: user?.email || '', message: '' });
   const [intakeData, setIntakeData] = useState({ name: user?.name || '', email: user?.email || '', projectType: '', budget: '', timeline: '', description: '' });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
@@ -205,11 +205,11 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-dark-300 mb-2">Your Name *</label>
-                    <input type="text" required value={intakeData.name} onChange={e => setIntakeData({ ...intakeData, name: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30" placeholder="John Doe" />
+                    <input type="text" required value={intakeData.name} onChange={e => !user && setIntakeData({ ...intakeData, name: e.target.value })} readOnly={!!user} className={`w-full px-4 py-3 rounded-lg border text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 ${user ? 'bg-dark-800/20 border-dark-700/30 cursor-not-allowed text-dark-400' : 'bg-dark-800/50 border-dark-700/50'}`} placeholder="John Doe" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-dark-300 mb-2">Email Address *</label>
-                    <input type="email" required value={intakeData.email} onChange={e => setIntakeData({ ...intakeData, email: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30" placeholder="you@example.com" />
+                    <input type="email" required value={intakeData.email} onChange={e => !user && setIntakeData({ ...intakeData, email: e.target.value })} readOnly={!!user} className={`w-full px-4 py-3 rounded-lg border text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 ${user ? 'bg-dark-800/20 border-dark-700/30 cursor-not-allowed text-dark-400' : 'bg-dark-800/50 border-dark-700/50'}`} placeholder="you@example.com" />
                   </div>
                 </div>
 
@@ -271,11 +271,11 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-dark-300 mb-2">Your Name *</label>
-                    <input type="text" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30" placeholder="John Doe" />
+                    <input type="text" required value={formData.name} onChange={e => !user && setFormData({ ...formData, name: e.target.value })} readOnly={!!user} className={`w-full px-4 py-3 rounded-lg border text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 ${user ? 'bg-dark-800/20 border-dark-700/30 cursor-not-allowed text-dark-400' : 'bg-dark-800/50 border-dark-700/50'}`} placeholder="John Doe" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-dark-300 mb-2">Email Address *</label>
-                    <input type="email" required value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30" placeholder="you@example.com" />
+                    <input type="email" required value={formData.email} onChange={e => !user && setFormData({ ...formData, email: e.target.value })} readOnly={!!user} className={`w-full px-4 py-3 rounded-lg border text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 ${user ? 'bg-dark-800/20 border-dark-700/30 cursor-not-allowed text-dark-400' : 'bg-dark-800/50 border-dark-700/50'}`} placeholder="you@example.com" />
                   </div>
                 </div>
                 <div>

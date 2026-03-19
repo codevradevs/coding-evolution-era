@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Calendar, ArrowLeft, Tag } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import axios from 'axios';
+import api from '../lib/api';
 
 export default function BlogPostPage() {
   const { slug } = useParams();
@@ -18,7 +18,7 @@ export default function BlogPostPage() {
   const fetchBlog = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/blogs/${slug}`);
+      const { data } = await api.get(`/blogs/${slug}`);
       setBlog(data);
     } catch (error) {
       console.error('Error fetching blog:', error);
@@ -60,7 +60,7 @@ export default function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center py-32">
         <p className="text-dark-400">Loading article...</p>
       </div>
     );
@@ -68,7 +68,7 @@ export default function BlogPostPage() {
 
   if (!blog) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center py-32">
         <div className="text-center">
           <p className="text-dark-400 mb-4">Article not found</p>
           <Button onClick={() => navigate('/blog')}>Back to Blog</Button>

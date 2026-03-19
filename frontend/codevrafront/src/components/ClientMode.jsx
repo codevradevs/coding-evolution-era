@@ -115,8 +115,7 @@ export default function ClientMode() {
                 <div className="w-3 h-3 rounded-full bg-red-500"></div>
                 <span className="text-sm text-dark-400 font-mono">Vulnerable Code</span>
               </div>
-              <div className="font-mono text-sm bg-dark-900/50 rounded-lg p-4 mb-4">
-                <div className="text-red-400">// No rate limiting</div>
+              <div className="font-mono text-xs sm:text-sm bg-dark-900/50 rounded-lg p-3 sm:p-4 mb-4 overflow-x-auto">
                 <div className="text-red-400">// Plain text passwords</div>
                 <div className="text-red-400">// No input validation</div>
                 <div className="text-red-400">// SQL injection risk</div>
@@ -146,8 +145,7 @@ export default function ClientMode() {
                 <div className="w-3 h-3 rounded-full bg-brand-500"></div>
                 <span className="text-sm text-dark-400 font-mono">Codevra Standard</span>
               </div>
-              <div className="font-mono text-sm bg-dark-900/50 rounded-lg p-4 mb-4">
-                <div className="text-brand-400">// JWT with expiration</div>
+              <div className="font-mono text-xs sm:text-sm bg-dark-900/50 rounded-lg p-3 sm:p-4 mb-4 overflow-x-auto">
                 <div className="text-brand-400">// bcrypt hashing</div>
                 <div className="text-brand-400">// Rate limiting</div>
                 <div className="text-brand-400">// Parameterized queries</div>

@@ -24,9 +24,9 @@ export default function HomePage() {
             transition={{ duration: 0.5 }}
             className="mb-6"
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-brand text-brand-400 text-sm font-medium">
-              <Zap className="w-3.5 h-3.5" />
-              M-Pesa Integration • Bank-Level Security • African Innovation
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-brand text-brand-400 text-xs font-medium text-center">
+              <Zap className="w-3.5 h-3.5 shrink-0" />
+              M-Pesa Integration · Bank-Level Security · African Innovation
             </span>
           </motion.div>
 

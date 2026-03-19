@@ -391,7 +391,7 @@ export default function TrackerPage() {
 
       <section className="relative px-4 pb-20">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-wrap items-center gap-2 mb-6">
+          <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
             <button onClick={() => setTrack('frontend')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${track === 'frontend' ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' : 'text-dark-400 hover:text-dark-200'}`}>
               <Code2 className="w-4 h-4" />Frontend
             </button>
@@ -408,7 +408,7 @@ export default function TrackerPage() {
               <Cpu className="w-4 h-4" />Advanced ML
             </button>
           </div>
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
             <button onClick={() => setView('dashboard')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${view === 'dashboard' ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' : 'text-dark-400 hover:text-dark-200'}`}>Dashboard</button>
             <button onClick={() => setView('lessons')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${view === 'lessons' ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' : 'text-dark-400 hover:text-dark-200'}`}>Lessons</button>
             <button onClick={() => setView('quiz')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${view === 'quiz' ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' : 'text-dark-400 hover:text-dark-200'}`}>Final Quiz</button>

@@ -239,16 +239,14 @@ export default function ArenaPage() {
           </div>
           {activeTab === 'challenges' ? (
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Filter className="w-4 h-4 text-dark-500" />
-                  {['All', 'Easy', 'Medium', 'Hard'].map(diff => (
-                    <button key={diff} onClick={() => { setDifficultyFilter(diff); setCurrentPage(1); }} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${difficultyFilter === diff ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' : 'text-dark-500 hover:text-dark-300'}`}>
-                      {diff} {diff !== 'All' && `(${challenges.filter(c => c.difficulty === diff).length})`}
-                    </button>
-                  ))}
-                </div>
-                <span className="text-xs text-dark-500">{filteredChallenges.length} challenges</span>
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 mb-4">
+                <Filter className="w-4 h-4 text-dark-500 shrink-0" />
+                {['All', 'Easy', 'Medium', 'Hard'].map(diff => (
+                  <button key={diff} onClick={() => { setDifficultyFilter(diff); setCurrentPage(1); }} className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${difficultyFilter === diff ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' : 'text-dark-500 hover:text-dark-300'}`}>
+                    {diff} {diff !== 'All' && `(${challenges.filter(c => c.difficulty === diff).length})`}
+                  </button>
+                ))}
+                <span className="ml-auto text-xs text-dark-500 shrink-0">{filteredChallenges.length} challenges</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                 {paginatedChallenges.map((challenge, i) => (

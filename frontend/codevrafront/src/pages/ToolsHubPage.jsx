@@ -520,7 +520,7 @@ function DiffChecker() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <textarea value={text1} onChange={e => setText1(e.target.value)} placeholder="Text 1..." className="w-full h-32 px-4 py-3 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent-500/30 resize-none" />
         <textarea value={text2} onChange={e => setText2(e.target.value)} placeholder="Text 2..." className="w-full h-32 px-4 py-3 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent-500/30 resize-none" />
       </div>
@@ -634,7 +634,7 @@ export default function ToolsHubPage() {
             </div>
           </div>
 
-          <motion.div key={activeTool} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="glass rounded-xl p-6 max-w-4xl mx-auto">
+          <motion.div key={activeTool} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="glass rounded-xl p-4 sm:p-6 max-w-4xl mx-auto min-w-0">
                 <div className="flex items-center gap-2 mb-6">
                   {(() => {
                     const tool = tools.find(t => t.id === activeTool);

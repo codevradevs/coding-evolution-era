@@ -42,11 +42,13 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   @apply bg-dark-950 text-dark-100 font-sans antialiased;
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
 }
 
 ::-webkit-scrollbar {

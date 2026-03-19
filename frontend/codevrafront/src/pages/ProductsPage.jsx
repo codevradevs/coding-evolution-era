@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Shield, Zap, BookOpen, Rocket, Check, Globe, Smartphone, Database, TrendingUp, MessageSquare, Cpu, Layers, Lock, BarChart, Video, Truck, Palette, Search, Target, X, Sparkles, Send, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
 const iconMap = {
@@ -46,7 +47,8 @@ export default function ProductsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [proposalData, setProposalData] = useState({ name: '', email: '', company: '', requirements: '' });
+  const { user } = useAuth();
+  const [proposalData, setProposalData] = useState({ name: user?.name || '', email: user?.email || '', company: '', requirements: '' });
   const [generatedProposal, setGeneratedProposal] = useState('');
   const navigate = useNavigate();
 
@@ -305,8 +307,9 @@ This proposal is valid for 30 days from the date of generation.`;
                         type="text"
                         required
                         value={proposalData.name}
-                        onChange={e => setProposalData({ ...proposalData, name: e.target.value })}
-                        className="w-full px-3 py-2 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+                        onChange={e => !user && setProposalData({ ...proposalData, name: e.target.value })}
+                        readOnly={!!user}
+                        className={`w-full px-3 py-2 rounded-lg border text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 ${user ? 'bg-dark-800/20 border-dark-700/30 cursor-not-allowed text-dark-400' : 'bg-dark-800/50 border-dark-700/50'}`}
                         placeholder="John Doe"
                       />
                     </div>
@@ -316,8 +319,9 @@ This proposal is valid for 30 days from the date of generation.`;
                         type="email"
                         required
                         value={proposalData.email}
-                        onChange={e => setProposalData({ ...proposalData, email: e.target.value })}
-                        className="w-full px-3 py-2 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+                        onChange={e => !user && setProposalData({ ...proposalData, email: e.target.value })}
+                        readOnly={!!user}
+                        className={`w-full px-3 py-2 rounded-lg border text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 ${user ? 'bg-dark-800/20 border-dark-700/30 cursor-not-allowed text-dark-400' : 'bg-dark-800/50 border-dark-700/50'}`}
                         placeholder="john@example.com"
                       />
                     </div>
