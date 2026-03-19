@@ -59,4 +59,25 @@ async function sendContactEmails({ name, email, subject, message }) {
   await Promise.allSettled([notifyMail, autoReply]);
 }
 
-module.exports = { sendContactEmails };
+async function sendPasswordResetEmail({ name, email, resetLink }) {
+  await transporter.sendMail({
+    from: `"Codevra Devs" <${process.env.GMAIL_USER}>`,
+    to: email,
+    subject: `Reset your Codevra password`,
+    html: `
+      <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:24px;background:#0f0f0f;color:#e5e5e5;border-radius:12px;">
+        <h2 style="color:#22c55e;">Password Reset Request 🔐</h2>
+        <p style="color:#aaa;font-size:14px;line-height:1.6;">Hey ${name}, we received a request to reset your <strong style="color:#e5e5e5;">Codevra</strong> password.</p>
+        <p style="color:#aaa;font-size:14px;">Click the button below to set a new password. This link expires in <strong style="color:#22c55e;">15 minutes</strong>.</p>
+        <div style="text-align:center;margin:32px 0;">
+          <a href="${resetLink}" style="background:#22c55e;color:#000;padding:14px 32px;border-radius:8px;text-decoration:none;font-size:15px;font-weight:bold;">Reset My Password →</a>
+        </div>
+        <p style="color:#555;font-size:12px;">If you didn't request this, ignore this email — your password won't change.</p>
+        <hr style="border-color:#333;margin:24px 0;" />
+        <p style="color:#555;font-size:12px;">Codevra Devs · Nairobi, Kenya · <a href="https://codevra.vercel.app" style="color:#22c55e;">codevra.vercel.app</a></p>
+      </div>
+    `,
+  }).catch(err => console.error('[mailer] Password reset email failed:', err.message));
+}
+
+module.exports = { sendContactEmails, sendPasswordResetEmail };

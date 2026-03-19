@@ -23,15 +23,18 @@ import CyberSimulatorPage from './pages/CyberSimulatorPage';
 import LogicPuzzlesPage from './pages/LogicPuzzlesPage';
 import ChaosModePage from './pages/ChaosModePage';
 import DocsPage from './pages/DocsPage';
+import ProfilePage from './pages/ProfilePage';
+import RankingsPage from './pages/RankingsPage';
 import AuthPage from './pages/AuthPage';
 import Chatbot from './components/Chatbot';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
 import './index.css';
 
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <div className="min-h-screen flex flex-col">
           <Navbar />
           <main className="flex-1 pt-16">
@@ -57,7 +60,9 @@ function App() {
               <Route path="/fun-lab/games" element={<LogicPuzzlesPage />} />
               <Route path="/fun-lab/chaos" element={<ChaosModePage />} />
               <Route path="/docs" element={<DocsPage />} />
-              <Route path="/docs" element={<DocsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/rankings" element={<RankingsPage />} />
+              <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
               <Route path="/auth/login" element={<AuthPage />} />
               <Route path="/auth/register" element={<AuthPage />} />
               <Route path="/auth/callback" element={<AuthCallbackPage />} />

@@ -106,4 +106,22 @@ export const contactApi = {
   sendMessage: (data) => api.post('/contact', data),
 };
 
+export const profileApi = {
+  get: () => api.get('/profile'),
+  update: (data) => api.put('/profile', data),
+  ping: (minutes) => api.post('/profile/ping', { minutes }),
+};
+
+export const certificatesApi = {
+  getMine: () => api.get('/certificates'),
+  award: (data) => api.post('/certificates/award', data),
+  getAll: () => api.get('/certificates/all'),
+  revoke: (id) => api.delete(`/certificates/${id}`),
+};
+
+export const rankingsApi = {
+  get: (sort = 'xp', limit = 50) => api.get(`/rankings?sort=${sort}&limit=${limit}`),
+  getMe: () => api.get('/rankings/me'),
+};
+
 export default api;

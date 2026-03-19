@@ -16,6 +16,9 @@ const networkRoutes = require('./routes/network');
 const contactRoutes = require('./routes/contact');
 const tipsRoutes = require('./routes/tips');
 const productsRoutes = require('./routes/products');
+const profileRoutes = require('./routes/profile');
+const certificateRoutes = require('./routes/certificates');
+const rankingsRoutes = require('./routes/rankings');
 const blogsRoutes = require('./routes/blogs');
 
 const app = express();
@@ -63,6 +66,9 @@ app.use('/api/network', networkRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/tips', tipsRoutes);
 app.use('/api/products', productsRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/certificates', certificateRoutes);
+app.use('/api/rankings', rankingsRoutes);
 app.use('/api/blogs', blogsRoutes);
 
 app.use((req, res) => res.status(404).json({ error: 'Route not found' }));

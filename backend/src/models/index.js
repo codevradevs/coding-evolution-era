@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
   githubId: { type: String, sparse: true },
   avatar: { type: String },
   provider: { type: String, enum: ['local', 'google', 'github'], default: 'local' },
+  resetToken: { type: String },
+  resetTokenExpiry: { type: Date },
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -115,6 +117,42 @@ const blogPostSchema = new mongoose.Schema({
   publishedAt: { type: Date, default: Date.now },
 }, { timestamps: true });
 
+const userProfileSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+  bio: { type: String, default: '' },
+  avatar: { type: String, default: '' },
+  github: { type: String, default: '' },
+  twitter: { type: String, default: '' },
+  linkedin: { type: String, default: '' },
+  website: { type: String, default: '' },
+  location: { type: String, default: '' },
+  xp: { type: Number, default: 0 },
+  timeSpentMinutes: { type: Number, default: 0 },
+  lastSeen: { type: Date, default: Date.now },
+}, { timestamps: true });
+
+const certificateSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  title: { type: String, required: true },
+  description: { type: String, default: '' },
+  category: { type: String, enum: ['arena', 'tracker', 'special', 'community'], default: 'special' },
+  badgeIcon: { type: String, default: '🏆' },
+  awardedBy: { type: String, default: 'Codevra' },
+  awardedAt: { type: Date, default: Date.now },
+  credentialId: { type: String, unique: true },
+}, { timestamps: true });
+
+const rankingSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+  xp: { type: Number, default: 0 },
+  certificateCount: { type: Number, default: 0 },
+  timeSpentMinutes: { type: Number, default: 0 },
+  challengesSolved: { type: Number, default: 0 },
+  rank: { type: Number, default: 0 },
+  tier: { type: String, enum: ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'], default: 'Bronze' },
+  updatedAt: { type: Date, default: Date.now },
+}, { timestamps: true });
+
 const User = mongoose.model('User', userSchema);
 const VaultNote = mongoose.model('VaultNote', vaultNoteSchema);
 const Challenge = mongoose.model('Challenge', challengeSchema);
@@ -127,8 +165,15 @@ const UserTipProgress = mongoose.model('UserTipProgress', userTipProgressSchema)
 const Product = mongoose.model('Product', productSchema);
 const BlogPost = mongoose.model('BlogPost', blogPostSchema);
 
+const UserProfile = mongoose.model('UserProfile', userProfileSchema);
+const Certificate = mongoose.model('Certificate', certificateSchema);
+const Ranking = mongoose.model('Ranking', rankingSchema);
+
 module.exports = {
   User,
+  UserProfile,
+  Certificate,
+  Ranking,
   VaultNote,
   Challenge,
   Submission,

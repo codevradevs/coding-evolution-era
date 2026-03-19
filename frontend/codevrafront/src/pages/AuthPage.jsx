@@ -1,17 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Code2, Mail, Lock, User, CheckCircle, Zap, Github } from 'lucide-react';
+import { Shield, Code2, Mail, Lock, User, CheckCircle, Zap, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
+import api from '../lib/api';
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [forgotMode, setForgotMode] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotSent, setForgotSent] = useState(false);
   const { login, register } = useAuth();
   const navigate = useNavigate();
 
@@ -28,6 +33,20 @@ export default function AuthPage() {
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.error || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      await api.post('/auth/forgot-password', { email: forgotEmail });
+      setForgotSent(true);
+    } catch {
+      setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -207,7 +226,39 @@ export default function AuthPage() {
                 </div>
 
                 {/* Form */}
-                <AnimatePresence mode="wait">
+                {/* Forgot Password Mode */}
+                {forgotMode ? (
+                  <motion.div key="forgot" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="space-y-5">
+                    <button onClick={() => { setForgotMode(false); setForgotSent(false); setError(''); }} className="flex items-center gap-1.5 text-sm text-dark-400 hover:text-dark-200 transition-colors mb-2">
+                      <ArrowLeft className="w-4 h-4" /> Back to Sign In
+                    </button>
+                    {forgotSent ? (
+                      <div className="text-center py-6 space-y-3">
+                        <div className="w-14 h-14 rounded-full bg-brand-500/10 flex items-center justify-center mx-auto">
+                          <Mail className="w-7 h-7 text-brand-400" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-dark-100">Check your email</h3>
+                        <p className="text-sm text-dark-400">If that email exists, a reset link was sent. Check your inbox and spam folder.</p>
+                        <p className="text-xs text-dark-600">Link expires in 15 minutes.</p>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleForgotPassword} className="space-y-4">
+                        <div>
+                          <h3 className="text-lg font-semibold text-dark-100 mb-1">Forgot Password?</h3>
+                          <p className="text-sm text-dark-500">Enter your email and we'll send a reset link.</p>
+                        </div>
+                        <div className="relative group">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-500 group-focus-within:text-brand-400 transition-colors" />
+                          <input type="email" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} required className="w-full pl-10 pr-4 py-3 rounded-lg bg-dark-900/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition-all" placeholder="you@example.com" />
+                        </div>
+                        {error && <p className="text-sm text-red-400">{error}</p>}
+                        <Button type="submit" className="w-full" size="lg" disabled={loading}>
+                          <Mail className="w-4 h-4" />{loading ? 'Sending...' : 'Send Reset Link'}
+                        </Button>
+                      </form>
+                    )}
+                  </motion.div>
+                ) : (
                   <motion.form
                     key={isSignUp ? 'signup' : 'signin'}
                     initial={{ opacity: 0, x: isSignUp ? 20 : -20 }}
@@ -260,14 +311,22 @@ export default function AuthPage() {
                       <div className="relative group">
                         <Lock className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-500 group-focus-within:text-${isSignUp ? 'accent' : 'brand'}-400 transition-colors`} />
                         <input
-                          type="password"
+                          type={showPassword ? 'text' : 'password'}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           required
-                          className={`w-full pl-10 pr-4 py-3 rounded-lg bg-dark-900/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-${isSignUp ? 'accent' : 'brand'}-500/50 focus:border-${isSignUp ? 'accent' : 'brand'}-500/50 transition-all`}
+                          className={`w-full pl-10 pr-10 py-3 rounded-lg bg-dark-900/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-${isSignUp ? 'accent' : 'brand'}-500/50 focus:border-${isSignUp ? 'accent' : 'brand'}-500/50 transition-all`}
                           placeholder="••••••••"
                         />
+                        <button type="button" onClick={() => setShowPassword(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-500 hover:text-dark-300 transition-colors">
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
                       </div>
+                      {!isSignUp && (
+                        <button type="button" onClick={() => { setForgotMode(true); setForgotEmail(email); setError(''); }} className="mt-1.5 text-xs text-dark-500 hover:text-brand-400 transition-colors float-right">
+                          Forgot password?
+                        </button>
+                      )}
                     </div>
 
                     <Button
@@ -328,6 +387,7 @@ export default function AuthPage() {
                     </div>
                   </motion.form>
                 </AnimatePresence>
+                )}
 
                 {/* Security Badge */}
                 <div className="mt-6 pt-6 border-t border-dark-700/30">

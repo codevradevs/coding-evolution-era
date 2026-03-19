@@ -4,7 +4,7 @@ import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
 import {
   Menu, X, Home, User, FolderKanban, BookOpen, Mail,
-  Wrench, Lock, Gamepad2, TrendingUp, Globe, LogIn, LogOut, Lightbulb, Sparkles, Code2
+  Wrench, Lock, Gamepad2, TrendingUp, Globe, LogIn, LogOut, Lightbulb, Sparkles, Code2, Trophy
 } from 'lucide-react';
 import logo from '../../logo.png';
 
@@ -25,6 +25,7 @@ const ecosystemLinks = [
   { href: '/hub/network', label: 'Network', icon: Globe },
   { href: '/hub/tips', label: 'Dev Intel', icon: Lightbulb },
   { href: '/fun-lab', label: 'Fun Lab', icon: Sparkles },
+  { href: '/rankings', label: 'Rankings', icon: Trophy },
 ];
 
 export default function Navbar() {
@@ -131,7 +132,13 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             {user ? (
               <>
-                <span className="hidden md:block text-sm text-dark-400">Hi, {user.name}</span>
+                <Link
+                  to="/profile"
+                  className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-dark-300 hover:text-dark-100 hover:bg-dark-800/50 transition-all duration-200"
+                >
+                  <User className="w-4 h-4" />
+                  {user.name.split(' ')[0]}
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="hidden md:flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-dark-800 text-dark-300 hover:text-dark-100 transition-all duration-200"
@@ -212,13 +219,23 @@ export default function Navbar() {
 
             <div className="pt-2">
               {user ? (
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 rounded-lg text-sm font-medium bg-dark-800 text-dark-300 hover:text-dark-100 transition-all duration-200"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Logout
-                </button>
+                <>
+                  <Link
+                    to="/profile"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-dark-300 hover:text-dark-100 hover:bg-dark-800/50 transition-all duration-200 mb-1"
+                  >
+                    <User className="w-4 h-4" />
+                    My Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 rounded-lg text-sm font-medium bg-dark-800 text-dark-300 hover:text-dark-100 transition-all duration-200"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </>
               ) : (
                 <Link
                   to="/auth/login"
