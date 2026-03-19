@@ -24,6 +24,7 @@ import LogicPuzzlesPage from './pages/LogicPuzzlesPage';
 import ChaosModePage from './pages/ChaosModePage';
 import DocsPage from './pages/DocsPage';
 import AuthPage from './pages/AuthPage';
+import Chatbot from './components/Chatbot';
 import AuthCallbackPage from './pages/AuthCallbackPage';
 import './index.css';
 
@@ -55,12 +56,15 @@ function App() {
               <Route path="/fun-lab/cyber" element={<CyberSimulatorPage />} />
               <Route path="/fun-lab/games" element={<LogicPuzzlesPage />} />
               <Route path="/fun-lab/chaos" element={<ChaosModePage />} />
+              <Route path="/docs" element={<DocsPage />} />
+              <Route path="/docs" element={<DocsPage />} />
               <Route path="/auth/login" element={<AuthPage />} />
               <Route path="/auth/register" element={<AuthPage />} />
               <Route path="/auth/callback" element={<AuthCallbackPage />} />
             </Routes>
           </main>
           <Footer />
+          <Chatbot />
         </div>
       </Router>
     </AuthProvider>
