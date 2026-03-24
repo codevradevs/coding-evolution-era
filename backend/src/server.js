@@ -104,7 +104,6 @@ app.use(session({
 }));
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 // ─── Health Check (no auth, no rate limit) ───────────────────────────────────
 app.get('/api/health', (req, res) => {

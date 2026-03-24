@@ -217,28 +217,40 @@ router.post('/qr/approve', authMiddleware, async (req, res) => {
 });
 
 // Google OAuth
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
 
 router.get('/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: `${process.env.CLIENT_URL}/auth/login?error=google` }),
-  (req, res) => {
-    const accessToken = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-    const refreshToken = jwt.sign({ userId: req.user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
-    const params = new URLSearchParams({ token: accessToken, refresh: refreshToken });
-    res.redirect(`${process.env.CLIENT_URL}/auth/callback?${params.toString()}`);
+  (req, res, next) => {
+    passport.authenticate('google', { session: false }, (err, user) => {
+      if (err) {
+        console.error('[google oauth error]', err);
+        return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=google`);
+      }
+      if (!user) return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=google`);
+      const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+      const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
+      const params = new URLSearchParams({ token: accessToken, refresh: refreshToken });
+      res.redirect(`${process.env.CLIENT_URL}/auth/callback?${params.toString()}`);
+    })(req, res, next);
   }
 );
 
 // GitHub OAuth
-router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+router.get('/github', passport.authenticate('github', { scope: ['user:email'], session: false }));
 
 router.get('/github/callback',
-  passport.authenticate('github', { session: false, failureRedirect: `${process.env.CLIENT_URL}/auth/callback?error=github` }),
-  (req, res) => {
-    const accessToken = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-    const refreshToken = jwt.sign({ userId: req.user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
-    const params = new URLSearchParams({ token: accessToken, refresh: refreshToken });
-    res.redirect(`${process.env.CLIENT_URL}/auth/callback?${params.toString()}`);
+  (req, res, next) => {
+    passport.authenticate('github', { session: false }, (err, user) => {
+      if (err) {
+        console.error('[github oauth error]', err);
+        return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=github`);
+      }
+      if (!user) return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=github`);
+      const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+      const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
+      const params = new URLSearchParams({ token: accessToken, refresh: refreshToken });
+      res.redirect(`${process.env.CLIENT_URL}/auth/callback?${params.toString()}`);
+    })(req, res, next);
   }
 );
 
