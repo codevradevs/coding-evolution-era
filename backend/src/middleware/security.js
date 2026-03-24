@@ -133,10 +133,14 @@ const suspiciousRequestDetector = (req, res, next) => {
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
 const buildCorsOptions = () => {
-  const allowed = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/+$/, '');
+  const allowed = new Set([
+    (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/+$/, ''),
+    'http://localhost:3000',
+    'http://localhost:5173',
+  ]);
   return {
     origin: (origin, callback) => {
-      if (!origin || origin === allowed) return callback(null, true);
+      if (!origin || allowed.has(origin)) return callback(null, true);
       if (process.env.NODE_ENV !== 'production') return callback(null, true);
       console.warn(`[security] CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
