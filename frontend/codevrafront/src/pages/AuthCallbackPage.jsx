@@ -23,7 +23,7 @@ export default function AuthCallbackPage() {
       localStorage.setItem('accessToken', token);
       localStorage.setItem('refreshToken', refresh);
 
-      const base = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api$/, '');
+      const base = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
       const headers = { 'Authorization': `Bearer ${token}` };
 
       Promise.all([
