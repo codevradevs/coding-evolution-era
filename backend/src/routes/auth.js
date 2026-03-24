@@ -217,7 +217,7 @@ router.post('/qr/approve', authMiddleware, async (req, res) => {
 });
 
 // Google OAuth
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false, state: false }));
 
 router.get('/google/callback',
   (req, res, next) => {
