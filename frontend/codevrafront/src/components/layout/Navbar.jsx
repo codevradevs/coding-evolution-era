@@ -4,12 +4,13 @@ import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
 import {
   Menu, X, Home, User, FolderKanban, BookOpen, Mail,
-  Wrench, Lock, Gamepad2, TrendingUp, Globe, LogIn, LogOut, Lightbulb, Sparkles, Code2, Trophy
+  Wrench, Lock, Gamepad2, TrendingUp, Globe, LogIn, LogOut, Lightbulb, Sparkles, Code2, Trophy, Briefcase
 } from 'lucide-react';
 import logo from '../../logo.png';
 
 const navLinks = [
   { href: '/', label: 'Home', icon: Home },
+  { href: '/services', label: 'Services', icon: Briefcase },
   { href: '/about', label: 'About', icon: User },
   { href: '/products', label: 'Products', icon: FolderKanban },
   { href: '/projects', label: 'Projects', icon: FolderKanban },
@@ -168,8 +169,41 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden glass border-t border-dark-700/50">
+        <div className="md:hidden glass border-t border-dark-700/50 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 4rem)' }}>
           <div className="px-4 py-4 space-y-1">
+
+            {/* Auth section — top of mobile menu */}
+            <div className="pb-3 mb-2 border-b border-dark-700/50">
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <Link
+                    to="/profile"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2 flex-1 px-3 py-2.5 rounded-lg text-sm font-medium bg-dark-800/70 text-dark-100 hover:bg-dark-700/70 transition-all duration-200"
+                  >
+                    <User className="w-4 h-4 text-brand-400" />
+                    {user.name?.split(' ')[0] ?? user.email?.split('@')[0] ?? 'Profile'}
+                  </Link>
+                  <button
+                    onClick={() => { handleLogout(); setMobileOpen(false); }}
+                    className="flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-sm font-medium bg-dark-800/70 text-dark-400 hover:text-dark-100 transition-all duration-200"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/auth/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 rounded-lg text-sm font-semibold bg-brand-500 text-dark-950 hover:bg-brand-400 transition-all duration-200"
+                >
+                  <LogIn className="w-4 h-4" />
+                  Sign In
+                </Link>
+              )}
+            </div>
+
             {navLinks.map((link) => {
               const Icon = link.icon;
               const isActive = location.pathname === link.href;
@@ -217,36 +251,7 @@ export default function Navbar() {
               })}
             </div>
 
-            <div className="pt-2">
-              {user ? (
-                <>
-                  <Link
-                    to="/profile"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-dark-300 hover:text-dark-100 hover:bg-dark-800/50 transition-all duration-200 mb-1"
-                  >
-                    <User className="w-4 h-4" />
-                    My Profile
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 rounded-lg text-sm font-medium bg-dark-800 text-dark-300 hover:text-dark-100 transition-all duration-200"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/auth/login"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium bg-brand-500 text-dark-950 hover:bg-brand-400 transition-all duration-200"
-                >
-                  <LogIn className="w-4 h-4" />
-                  Sign In
-                </Link>
-              )}
-            </div>
+
           </div>
         </div>
       )}

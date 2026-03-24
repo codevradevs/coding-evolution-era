@@ -30,7 +30,7 @@ const timelines = ['ASAP', '1-2 weeks', '1 month', '2-3 months', 'Flexible'];
 const faqs = [
   { q: 'How fast can you start?', a: 'Most projects kick off within 3-5 business days after the initial consultation and deposit.' },
   { q: 'Do you work with international clients?', a: 'Yes. We work with clients across Africa and internationally. Payments via M-Pesa, bank transfer, or Wise.' },
-  { q: 'What tech stack do you use?', a: 'React / Next.js on the frontend, Node.js + Express on the backend, MongoDB or PostgreSQL, deployed on Vercel + Render.' },
+  { q: 'What tech stack do you use?', a: 'We are tech-agnostic — we build with whatever stack best fits your project, budget, and team. From React to Vue, Node.js to Laravel, MySQL to MongoDB, Flutter to React Native. We recommend the right tool for the job, not the other way around.' },
   { q: 'How do payments work?', a: '50% deposit to start, 50% on delivery. M-Pesa, bank transfer, or Wise accepted.' },
 ];
 

@@ -26,6 +26,11 @@ router.post('/register', async (req, res) => {
     const exists = await User.findOne({ email: email.toLowerCase() });
     if (exists) return res.status(400).json({ error: 'Email already registered' });
 
+    // Validate name — no HTML, no scripts
+    if (!/^[a-zA-Z0-9\s'\-\.]{2,100}$/.test(name.trim())) {
+      return res.status(400).json({ error: 'Name contains invalid characters.' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await User.create({ name: name.trim(), email: email.toLowerCase(), password: hashedPassword });
 
@@ -51,7 +56,28 @@ router.post('/login', async (req, res) => {
     if (!user || !user.password) return res.status(401).json({ error: 'Invalid credentials' });
 
     const valid = await bcrypt.compare(password, user.password);
-    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!valid) {
+      // Track failed attempts
+      user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
+      user.lastFailedLogin = new Date();
+      if (user.failedLoginAttempts >= 10) {
+        user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000); // lock 30 min
+      }
+      await user.save();
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Check account lock
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      const mins = Math.ceil((user.lockedUntil - Date.now()) / 60000);
+      return res.status(423).json({ error: `Account locked. Try again in ${mins} minutes.` });
+    }
+
+    // Reset failed attempts on success
+    user.failedLoginAttempts = 0;
+    user.lockedUntil = undefined;
+    user.lastLogin = new Date();
+    await user.save();
 
     const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
     const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
@@ -84,7 +110,7 @@ router.post('/refresh', async (req, res) => {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) return res.status(400).json({ error: 'Refresh token required' });
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, { algorithms: ['HS256'] });
     const accessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
     const newRefreshToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
     res.json({ accessToken, refreshToken: newRefreshToken });
@@ -94,7 +120,12 @@ router.post('/refresh', async (req, res) => {
 });
 
 // Forgot Password
-router.post('/forgot-password', async (req, res) => {
+const { forgotPasswordLimiter, authLimiter } = require('../middleware/security');
+
+router.post('/register', authLimiter);
+router.post('/login', authLimiter);
+
+router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required' });

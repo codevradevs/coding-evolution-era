@@ -1,11 +1,23 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, ArrowRight, Terminal } from 'lucide-react';
+import { Zap, ArrowRight, Terminal, Globe, Smartphone, CheckCircle, Shield, TrendingUp } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import ModeToggle from '../components/ModeToggle';
 import ClientMode from '../components/ClientMode';
 import DeveloperMode from '../components/DeveloperMode';
+
+const webHighlights = [
+  { icon: '🪶', title: 'Basic Website', range: 'KES 10K – 50K' },
+  { icon: '🛒', title: 'E-Commerce Store', range: 'KES 60K – 500K' },
+  { icon: '🧠', title: 'Custom Web App', range: 'KES 150K – 1.5M+' },
+];
+
+const appHighlights = [
+  { icon: '🪶', title: 'MVP App', range: 'KES 80K – 250K' },
+  { icon: '🚚', title: 'On-Demand App', range: 'KES 300K – 1M+' },
+  { icon: '💳', title: 'Fintech App', range: 'KES 120K – 2M+' },
+];
 
 export default function HomePage() {
   const [mode, setMode] = useState('client');
@@ -156,6 +168,108 @@ export default function HomePage() {
         {mode === 'client' && <ClientMode key="client" />}
         {mode === 'developer' && <DeveloperMode key="developer" />}
       </AnimatePresence>
+
+      <section className="relative py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold text-dark-100 mb-4">
+              What We <span className="gradient-text">Build</span>
+            </h2>
+            <p className="text-dark-400 max-w-2xl mx-auto">
+              From simple websites to full-scale mobile apps — Kenyan market pricing, no hidden fees.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="glass rounded-xl p-6"
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <Globe className="w-6 h-6 text-brand-400" />
+                <h3 className="text-xl font-bold text-dark-100">Web Development</h3>
+              </div>
+              <div className="space-y-3">
+                {webHighlights.map((s) => (
+                  <div key={s.title} className="flex items-center justify-between p-3 rounded-lg bg-dark-800/30 hover:bg-dark-800/50 transition-all">
+                    <span className="flex items-center gap-2 text-dark-200 font-medium">
+                      <span>{s.icon}</span>{s.title}
+                    </span>
+                    <span className="text-brand-400 text-sm font-semibold">{s.range}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="glass rounded-xl p-6"
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <Smartphone className="w-6 h-6 text-brand-400" />
+                <h3 className="text-xl font-bold text-dark-100">Mobile Apps</h3>
+              </div>
+              <div className="space-y-3">
+                {appHighlights.map((s) => (
+                  <div key={s.title} className="flex items-center justify-between p-3 rounded-lg bg-dark-800/30 hover:bg-dark-800/50 transition-all">
+                    <span className="flex items-center gap-2 text-dark-200 font-medium">
+                      <span>{s.icon}</span>{s.title}
+                    </span>
+                    <span className="text-brand-400 text-sm font-semibold">{s.range}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+            {[
+              { icon: Shield, label: 'Security First', desc: 'bcrypt, JWT, rate limiting by default' },
+              { icon: TrendingUp, label: 'Built to Scale', desc: 'Architecture that grows with you' },
+              { icon: Zap, label: 'Fast Delivery', desc: 'MVPs in days, not months' },
+            ].map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="glass rounded-xl p-5 flex items-center gap-4 hover:border-brand-500/30 transition-all"
+                >
+                  <Icon className="w-8 h-8 text-brand-400 shrink-0" />
+                  <div>
+                    <div className="font-semibold text-dark-100 text-sm">{item.label}</div>
+                    <div className="text-xs text-dark-400">{item.desc}</div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/services">
+              <Button size="lg" className="group">
+                View All Services & Pricing
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link to="/contact">
+              <Button variant="outline" size="lg">Get a Free Quote</Button>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       <section className="relative py-20 px-4">
           <div className="max-w-4xl mx-auto">

@@ -30,6 +30,7 @@ import RankingsPage from './pages/RankingsPage';
 import AuthPage from './pages/AuthPage';
 import Chatbot from './components/Chatbot';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import ServicesPage from './pages/ServicesPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
 import './index.css';
 
@@ -45,6 +46,7 @@ function App() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/products" element={<ProductsPage />} />
+              <Route path="/services" element={<ServicesPage />} />
               <Route path="/blog" element={<BlogsPage />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
               <Route path="/contact" element={<ContactPage />} />

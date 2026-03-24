@@ -106,6 +106,11 @@ export const contactApi = {
   sendMessage: (data) => api.post('/contact', data),
 };
 
+export const servicesApi = {
+  getServices: () => api.get('/services'),
+  submitQuote: (data) => api.post('/services/quote', data),
+};
+
 export const profileApi = {
   get: () => api.get('/profile'),
   update: (data) => api.put('/profile', data),

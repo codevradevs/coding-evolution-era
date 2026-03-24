@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
   provider: { type: String, enum: ['local', 'google', 'github'], default: 'local' },
   resetToken: { type: String },
   resetTokenExpiry: { type: Date },
+  failedLoginAttempts: { type: Number, default: 0 },
+  lockedUntil: { type: Date },
+  lastLogin: { type: Date },
+  lastFailedLogin: { type: Date },
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -71,8 +75,22 @@ const contactMessageSchema = new mongoose.Schema({
   email: { type: String, required: true },
   subject: { type: String, required: true },
   message: { type: String, required: true },
+  type: { type: String, enum: ['contact', 'intake'], default: 'contact' },
   createdAt: { type: Date, default: Date.now },
 });
+
+const serviceQuoteSchema = new mongoose.Schema({
+  name: { type: String, required: true, maxlength: 100 },
+  email: { type: String, required: true, maxlength: 200 },
+  company: { type: String, default: '', maxlength: 100 },
+  serviceTitle: { type: String, required: true, maxlength: 200 },
+  serviceCategory: { type: String, required: true, maxlength: 100 },
+  requirements: { type: String, required: true, maxlength: 5000 },
+  proposal: { type: String, required: true, maxlength: 10000 },
+  ip: { type: String, default: '' },
+  userAgent: { type: String, default: '' },
+  status: { type: String, enum: ['new', 'reviewed', 'contacted', 'closed'], default: 'new' },
+}, { timestamps: true });
 
 const tipSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -160,6 +178,7 @@ const Submission = mongoose.model('Submission', submissionSchema);
 const TrackerItem = mongoose.model('TrackerItem', trackerItemSchema);
 const NetworkProfile = mongoose.model('NetworkProfile', networkProfileSchema);
 const ContactMessage = mongoose.model('ContactMessage', contactMessageSchema);
+const ServiceQuote = mongoose.model('ServiceQuote', serviceQuoteSchema);
 const Tip = mongoose.model('Tip', tipSchema);
 const UserTipProgress = mongoose.model('UserTipProgress', userTipProgressSchema);
 const Product = mongoose.model('Product', productSchema);
@@ -180,6 +199,7 @@ module.exports = {
   TrackerItem,
   NetworkProfile,
   ContactMessage,
+  ServiceQuote,
   Tip,
   UserTipProgress,
   Product,
