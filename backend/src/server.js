@@ -133,10 +133,11 @@ app.use((req, res) => res.status(404).json({ error: 'Not found.' }));
 // ─── Global Error Handler (never leak stack traces) ──────────────────────────
 app.use((err, req, res, next) => {
   console.error(`[error] ${err.message} — ${req.method} ${req.path} — IP: ${req.ip}`);
+  console.error(err.stack);
   if (err.message === 'Not allowed by CORS') {
     return res.status(403).json({ error: 'CORS policy violation.' });
   }
-  res.status(err.status || 500).json({ error: 'Something went wrong.' });
+  res.status(err.status || 500).json({ error: err.message || 'Something went wrong.' });
 });
 
 app.listen(PORT, () => {
