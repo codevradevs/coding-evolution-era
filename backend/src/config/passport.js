@@ -20,7 +20,9 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        console.log('[google] profile received:', JSON.stringify({ id: profile.id, email: profile.emails?.[0]?.value, name: profile.displayName }));
         let user = await User.findOne({ email: profile.emails[0].value });
+        console.log('[google] existing user:', user ? user._id : 'none');
         if (user) {
           if (!user.googleId) { user.googleId = profile.id; user.avatar = profile.photos[0]?.value; await user.save(); }
           await UserProfile.findOneAndUpdate(
@@ -28,6 +30,7 @@ passport.use(
             { avatar: profile.photos[0]?.value },
             { upsert: false }
           ).catch(() => {});
+          console.log('[google] returning existing user');
           return done(null, user);
         }
         user = await User.create({
@@ -37,9 +40,11 @@ passport.use(
           avatar: profile.photos[0]?.value,
           provider: 'google',
         });
+        console.log('[google] created new user:', user._id);
         await UserProfile.create({ userId: user._id, avatar: profile.photos[0]?.value }).catch(() => {});
         done(null, user);
       } catch (error) {
+        console.error('[google] strategy error:', error.message, error.stack);
         done(error, null);
       }
     }
@@ -58,9 +63,11 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        console.log('[github] profile received:', JSON.stringify({ id: profile.id, email: profile.emails?.[0]?.value, name: profile.displayName }));
         const email = profile.emails?.[0]?.value;
         if (!email) return done(new Error('No email found from GitHub'), null);
         let user = await User.findOne({ email });
+        console.log('[github] existing user:', user ? user._id : 'none');
         if (user) {
           if (!user.githubId) { user.githubId = profile.id; user.avatar = profile.photos[0]?.value; await user.save(); }
           await UserProfile.findOneAndUpdate(
@@ -68,6 +75,7 @@ passport.use(
             { avatar: profile.photos[0]?.value },
             { upsert: false }
           ).catch(() => {});
+          console.log('[github] returning existing user');
           return done(null, user);
         }
         user = await User.create({
@@ -77,9 +85,11 @@ passport.use(
           avatar: profile.photos[0]?.value,
           provider: 'github',
         });
+        console.log('[github] created new user:', user._id);
         await UserProfile.create({ userId: user._id, avatar: profile.photos[0]?.value }).catch(() => {});
         done(null, user);
       } catch (error) {
+        console.error('[github] strategy error:', error.message, error.stack);
         done(error, null);
       }
     }

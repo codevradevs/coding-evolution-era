@@ -221,7 +221,9 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get('/google/callback',
   (req, res, next) => {
+    console.log('[google callback] query:', JSON.stringify(req.query));
     passport.authenticate('google', { session: false }, (err, user) => {
+      console.log('[google callback] err:', err?.message, '| user:', user?._id);
       if (err) {
         console.error('[google oauth error]', err);
         return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=google`);
@@ -240,7 +242,9 @@ router.get('/github', passport.authenticate('github', { scope: ['user:email'], s
 
 router.get('/github/callback',
   (req, res, next) => {
+    console.log('[github callback] query:', JSON.stringify(req.query));
     passport.authenticate('github', { session: false }, (err, user) => {
+      console.log('[github callback] err:', err?.message, '| user:', user?._id);
       if (err) {
         console.error('[github oauth error]', err);
         return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=github`);
