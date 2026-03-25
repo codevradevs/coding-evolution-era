@@ -208,6 +208,17 @@ router.post('/qr/approve', authMiddleware, async (req, res) => {
   }
 });
 
+// ─── Debug (remove after confirming OAuth works) ────────────────────────────
+router.get('/debug-oauth', (req, res) => {
+  res.json({
+    API_URL: process.env.API_URL,
+    CLIENT_URL: process.env.CLIENT_URL,
+    NODE_ENV: process.env.NODE_ENV,
+    google_callback: `${process.env.API_URL}/api/auth/google/callback`,
+    github_callback: `${process.env.API_URL}/api/auth/github/callback`,
+  });
+});
+
 // ─── OAuth — Google ───────────────────────────────────────────────────────────
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
