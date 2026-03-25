@@ -7,87 +7,91 @@ const { v4: uuidv4 } = require('uuid');
 const passport = require('../config/passport');
 const { User } = require('../models');
 const { authMiddleware } = require('../middleware/auth');
-
-// In-memory QR sessions (keyed by sessionId)
-const qrSessions = {};
-
+const { forgotPasswordLimiter, authLimiter } = require('../middleware/security');
 const { sendPasswordResetEmail } = require('../utils/mailer');
 
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
+// In-memory QR sessions (keyed by sessionId)
+const qrSessions = {};
+
+const signTokens = (userId) => ({
+  accessToken: jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN }),
+  refreshToken: jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN }),
+});
+
+const userPayload = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  avatar: user.avatar,
+  provider: user.provider,
+});
+
+// ─── Local Auth ───────────────────────────────────────────────────────────────
+
+router.post('/register', authLimiter, async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) return res.status(400).json({ error: 'All fields are required' });
     if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return res.status(400).json({ error: 'Invalid email format' });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Invalid email format' });
+    if (!/^[a-zA-Z0-9\s'\-\.]{2,100}$/.test(name.trim())) return res.status(400).json({ error: 'Name contains invalid characters' });
 
     const exists = await User.findOne({ email: email.toLowerCase() });
     if (exists) return res.status(400).json({ error: 'Email already registered' });
 
-    // Validate name — no HTML, no scripts
-    if (!/^[a-zA-Z0-9\s'\-\.]{2,100}$/.test(name.trim())) {
-      return res.status(400).json({ error: 'Name contains invalid characters.' });
-    }
-
     const hashedPassword = await bcrypt.hash(password, 12);
-    const user = await User.create({ name: name.trim(), email: email.toLowerCase(), password: hashedPassword });
-
-    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-    const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
-
-    res.status(201).json({
-      user: { id: user._id, name: user.name, email: user.email, role: user.role, avatar: user.avatar },
-      accessToken,
-      refreshToken,
+    const user = await User.create({
+      name: name.trim(),
+      email: email.toLowerCase(),
+      password: hashedPassword,
+      provider: 'local',
     });
-  } catch (error) {
+
+    const tokens = signTokens(user._id);
+    res.status(201).json({ user: userPayload(user), ...tokens });
+  } catch {
     res.status(500).json({ error: 'Registration failed' });
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password are required' });
 
     const user = await User.findOne({ email: email.toLowerCase() });
+
+    // Reject OAuth-only accounts trying to use password login
     if (!user || !user.password) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) {
-      // Track failed attempts
-      user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
-      user.lastFailedLogin = new Date();
-      if (user.failedLoginAttempts >= 10) {
-        user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000); // lock 30 min
-      }
-      await user.save();
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    // Check account lock
+    // Check account lock before verifying password
     if (user.lockedUntil && user.lockedUntil > new Date()) {
       const mins = Math.ceil((user.lockedUntil - Date.now()) / 60000);
       return res.status(423).json({ error: `Account locked. Try again in ${mins} minutes.` });
     }
 
-    // Reset failed attempts on success
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
+      user.lastFailedLogin = new Date();
+      if (user.failedLoginAttempts >= 10) {
+        user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000);
+      }
+      await user.save();
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
     user.failedLoginAttempts = 0;
     user.lockedUntil = undefined;
     user.lastLogin = new Date();
     await user.save();
 
-    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-    const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
-
-    res.json({
-      user: { id: user._id, name: user.name, email: user.email, role: user.role, avatar: user.avatar },
-      accessToken,
-      refreshToken,
-    });
-  } catch (error) {
+    const tokens = signTokens(user._id);
+    res.json({ user: userPayload(user), ...tokens });
+  } catch {
     res.status(500).json({ error: 'Login failed' });
   }
 });
@@ -101,7 +105,7 @@ router.get('/me', authMiddleware, async (req, res) => {
     const user = await User.findById(req.userId).select('-password');
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to fetch profile' });
   }
 });
@@ -111,27 +115,22 @@ router.post('/refresh', async (req, res) => {
     const { refreshToken } = req.body;
     if (!refreshToken) return res.status(400).json({ error: 'Refresh token required' });
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, { algorithms: ['HS256'] });
-    const accessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-    const newRefreshToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
-    res.json({ accessToken, refreshToken: newRefreshToken });
-  } catch (error) {
+    const tokens = signTokens(decoded.userId);
+    res.json(tokens);
+  } catch {
     res.status(401).json({ error: 'Invalid refresh token' });
   }
 });
 
-// Forgot Password
-const { forgotPasswordLimiter, authLimiter } = require('../middleware/security');
-
-router.post('/register', authLimiter);
-router.post('/login', authLimiter);
+// ─── Password Reset ───────────────────────────────────────────────────────────
 
 router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required' });
 
-    // Always return same message to prevent user enumeration
     const user = await User.findOne({ email: email.toLowerCase() });
+    // Only local accounts can reset password; always return same message
     if (!user || user.provider !== 'local') {
       return res.json({ message: 'If that email exists, a reset link was sent' });
     }
@@ -145,22 +144,18 @@ router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
     await sendPasswordResetEmail({ name: user.name, email: user.email, resetLink });
 
     res.json({ message: 'If that email exists, a reset link was sent' });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to process request' });
   }
 });
 
-// Reset Password
 router.post('/reset-password/:token', async (req, res) => {
   try {
     const { token } = req.params;
     const { password } = req.body;
     if (!password || password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
 
-    const user = await User.findOne({
-      resetToken: token,
-      resetTokenExpiry: { $gt: new Date() },
-    });
+    const user = await User.findOne({ resetToken: token, resetTokenExpiry: { $gt: new Date() } });
     if (!user) return res.status(400).json({ error: 'Invalid or expired reset link' });
 
     user.password = await bcrypt.hash(password, 12);
@@ -169,26 +164,25 @@ router.post('/reset-password/:token', async (req, res) => {
     await user.save();
 
     res.json({ message: 'Password reset successful' });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to reset password' });
   }
 });
 
-// QR Login — generate QR
+// ─── QR Login ─────────────────────────────────────────────────────────────────
+
 router.get('/qr/generate', async (req, res) => {
   try {
     const sessionId = uuidv4();
     qrSessions[sessionId] = { status: 'pending', createdAt: Date.now() };
-    // Auto-expire after 2 minutes
     setTimeout(() => { delete qrSessions[sessionId]; }, 2 * 60 * 1000);
-    const qrDataUrl = await QRCode.toDataURL(sessionId);
-    res.json({ sessionId, qr: qrDataUrl });
+    const qr = await QRCode.toDataURL(sessionId);
+    res.json({ sessionId, qr });
   } catch {
     res.status(500).json({ error: 'Failed to generate QR' });
   }
 });
 
-// QR Login — poll status
 router.get('/qr/status/:sessionId', (req, res) => {
   const session = qrSessions[req.params.sessionId];
   if (!session) return res.status(404).json({ error: 'Session expired or not found' });
@@ -200,62 +194,44 @@ router.get('/qr/status/:sessionId', (req, res) => {
   res.json({ status: session.status });
 });
 
-// QR Login — approve (called from mobile/second device after scanning)
 router.post('/qr/approve', authMiddleware, async (req, res) => {
   try {
     const { sessionId } = req.body;
     if (!sessionId || !qrSessions[sessionId]) return res.status(404).json({ error: 'Session not found or expired' });
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
-    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-    const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
-    qrSessions[sessionId] = { status: 'approved', accessToken, refreshToken };
+    const tokens = signTokens(user._id);
+    qrSessions[sessionId] = { status: 'approved', ...tokens };
     res.json({ message: 'QR session approved' });
   } catch {
     res.status(500).json({ error: 'Failed to approve QR session' });
   }
 });
 
-// Google OAuth
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false, state: false }));
+// ─── OAuth — Google ───────────────────────────────────────────────────────────
 
-router.get('/google/callback',
-  (req, res, next) => {
-    console.log('[google callback] query:', JSON.stringify(req.query));
-    passport.authenticate('google', { session: false }, (err, user) => {
-      console.log('[google callback] err:', err?.message, '| user:', user?._id);
-      if (err) {
-        console.error('[google oauth error]', err);
-        return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=google`);
-      }
-      if (!user) return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=google`);
-      const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-      const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
-      const params = new URLSearchParams({ token: accessToken, refresh: refreshToken });
-      res.redirect(`${process.env.CLIENT_URL}/auth/callback?${params.toString()}`);
-    })(req, res, next);
-  }
-);
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
 
-// GitHub OAuth
+router.get('/google/callback', (req, res, next) => {
+  passport.authenticate('google', { session: false }, (err, user) => {
+    if (err || !user) return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=google`);
+    const tokens = signTokens(user._id);
+    const params = new URLSearchParams({ token: tokens.accessToken, refresh: tokens.refreshToken });
+    res.redirect(`${process.env.CLIENT_URL}/auth/callback?${params.toString()}`);
+  })(req, res, next);
+});
+
+// ─── OAuth — GitHub ───────────────────────────────────────────────────────────
+
 router.get('/github', passport.authenticate('github', { scope: ['user:email'], session: false }));
 
-router.get('/github/callback',
-  (req, res, next) => {
-    console.log('[github callback] query:', JSON.stringify(req.query));
-    passport.authenticate('github', { session: false }, (err, user) => {
-      console.log('[github callback] err:', err?.message, '| user:', user?._id);
-      if (err) {
-        console.error('[github oauth error]', err);
-        return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=github`);
-      }
-      if (!user) return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=github`);
-      const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-      const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
-      const params = new URLSearchParams({ token: accessToken, refresh: refreshToken });
-      res.redirect(`${process.env.CLIENT_URL}/auth/callback?${params.toString()}`);
-    })(req, res, next);
-  }
-);
+router.get('/github/callback', (req, res, next) => {
+  passport.authenticate('github', { session: false }, (err, user) => {
+    if (err || !user) return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=github`);
+    const tokens = signTokens(user._id);
+    const params = new URLSearchParams({ token: tokens.accessToken, refresh: tokens.refreshToken });
+    res.redirect(`${process.env.CLIENT_URL}/auth/callback?${params.toString()}`);
+  })(req, res, next);
+});
 
 module.exports = router;
