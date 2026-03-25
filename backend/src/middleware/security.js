@@ -137,6 +137,8 @@ const buildCorsOptions = () => {
     (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/+$/, ''),
     'http://localhost:3000',
     'http://localhost:5173',
+    'https://codevra.co.ke',
+    'https://www.codevra.co.ke',
   ]);
   return {
     origin: (origin, callback) => {
