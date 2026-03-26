@@ -100,6 +100,7 @@ app.use(session({
     httpOnly: true,
     sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'strict',
     maxAge: 24 * 60 * 60 * 1000,
+    domain: process.env.NODE_ENV === 'production' ? '.codevra.co.ke' : undefined,
   },
 }));
 
