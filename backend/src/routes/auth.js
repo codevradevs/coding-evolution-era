@@ -221,7 +221,13 @@ router.get('/debug-oauth', (req, res) => {
 
 // ─── OAuth — Google ───────────────────────────────────────────────────────────
 
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+router.get('/google', (req, res, next) => {
+  console.log('[google:route] /api/auth/google hit');
+  console.log('[google:route] API_URL:', process.env.API_URL);
+  console.log('[google:route] redirect_uri will be:', `${process.env.API_URL}/api/auth/google/callback`);
+  console.log('[google:route] GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
+  passport.authenticate('google', { scope: ['profile', 'email'], session: false })(req, res, next);
+});
 
 router.get('/google/callback', (req, res, next) => {
   passport.authenticate('google', { session: false }, (err, user) => {
@@ -234,7 +240,13 @@ router.get('/google/callback', (req, res, next) => {
 
 // ─── OAuth — GitHub ───────────────────────────────────────────────────────────
 
-router.get('/github', passport.authenticate('github', { scope: ['user:email'], session: false }));
+router.get('/github', (req, res, next) => {
+  console.log('[github:route] /api/auth/github hit');
+  console.log('[github:route] API_URL:', process.env.API_URL);
+  console.log('[github:route] redirect_uri will be:', `${process.env.API_URL}/api/auth/github/callback`);
+  console.log('[github:route] GITHUB_CLIENT_ID:', process.env.GITHUB_CLIENT_ID);
+  passport.authenticate('github', { scope: ['user:email'], session: false })(req, res, next);
+});
 
 router.get('/github/callback', (req, res, next) => {
   passport.authenticate('github', { session: false }, (err, user) => {

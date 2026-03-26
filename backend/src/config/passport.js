@@ -44,7 +44,12 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: `${process.env.API_URL}/api/auth/google/callback`,
     },
+    // eslint-disable-next-line no-unused-vars
     async (accessToken, refreshToken, profile, done) => {
+      const callbackURL = `${process.env.API_URL}/api/auth/google/callback`;
+      console.log('[google:oauth] redirect_uri sent to Google:', callbackURL);
+      console.log('[google:oauth] GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
+      console.log('[google:oauth] API_URL:', process.env.API_URL);
       try {
         const user = await upsertOAuthUser({
           provider: 'google',
@@ -72,6 +77,10 @@ passport.use(
       scope: ['user:email'],
     },
     async (accessToken, refreshToken, profile, done) => {
+      const callbackURL = `${process.env.API_URL}/api/auth/github/callback`;
+      console.log('[github:oauth] redirect_uri sent to GitHub:', callbackURL);
+      console.log('[github:oauth] GITHUB_CLIENT_ID:', process.env.GITHUB_CLIENT_ID);
+      console.log('[github:oauth] API_URL:', process.env.API_URL);
       try {
         const email = profile.emails?.[0]?.value;
         if (!email) return done(new Error('No email found from GitHub'), null);
