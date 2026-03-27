@@ -2,8 +2,31 @@ const express = require('express');
 const { ContactMessage } = require('../models');
 const { sendContactEmails, sendWhatsAppNotification } = require('../utils/mailer');
 const { contactLimiter, sanitizeString, isValidEmail } = require('../middleware/security');
+const jwt = require('jsonwebtoken');
+const { User } = require('../models');
 
 const router = express.Router();
+
+const adminOnly = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ error: 'Authentication required.' });
+  try {
+    const decoded = jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET, { algorithms: ['HS256'] });
+    const user = await User.findById(decoded.userId).select('role');
+    if (!user || user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
+    next();
+  } catch { res.status(401).json({ error: 'Invalid token.' }); }
+};
+
+// GET /api/contact — admin: list all messages
+router.get('/', adminOnly, async (req, res) => {
+  try {
+    const messages = await ContactMessage.find().sort({ createdAt: -1 }).limit(100);
+    res.json({ messages, total: messages.length });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 router.post('/', contactLimiter, async (req, res) => {
   try {

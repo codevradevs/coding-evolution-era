@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { Tip, UserTipProgress, User } = require('../models');
 const { authenticateToken } = require('../middleware/auth');
+const { withCache } = require('../utils/cache');
 
 // Get daily tip
-router.get('/daily', async (req, res) => {
+router.get('/daily', withCache('tips:daily', 3600), async (req, res) => {
   try {
     const tip = await Tip.findOne().sort({ createdAt: 1 });
     if (!tip) {
@@ -18,7 +19,7 @@ router.get('/daily', async (req, res) => {
 });
 
 // Get all tips
-router.get('/', async (req, res) => {
+router.get('/', withCache('tips', 300), async (req, res) => {
   try {
     const { category, difficulty, track } = req.query;
     const filter = {};

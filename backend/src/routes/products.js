@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { Product } = require('../models');
+const { withCache } = require('../utils/cache');
 
-router.get('/', async (req, res) => {
+router.get('/', withCache('products', 120), async (req, res) => {
   try {
     const { category, page = 1, limit = 12, search } = req.query;
     const query = {};
@@ -31,7 +32,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/categories', async (req, res) => {
+router.get('/categories', withCache('products:categories', 300), async (req, res) => {
   try {
     const categories = await Product.distinct('category');
     res.json(categories);
@@ -40,7 +41,7 @@ router.get('/categories', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', withCache('products:id', 120), async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ error: 'Product not found' });

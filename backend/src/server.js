@@ -19,6 +19,7 @@ const {
   buildCorsOptions,
 } = require('./middleware/security');
 
+const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const vaultRoutes = require('./routes/vault');
@@ -84,7 +85,7 @@ app.use(helmet({
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'", 'https://api.codevra.co.ke'],
+      connectSrc: ["'self'", 'https://api.codevra.co.ke', 'http://localhost:5000'],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
       frameAncestors: ["'none'"],
@@ -152,6 +153,7 @@ app.use(session({
 app.use(passport.initialize());
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
+app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/vault', vaultRoutes);
@@ -177,6 +179,15 @@ app.use((err, req, res, next) => {
     return res.status(403).json({ error: 'CORS policy violation.' });
   }
   res.status(err.status || 500).json({ error: err.message || 'Something went wrong.' });
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`[server] Port ${PORT} in use. Kill the process and restart.`);
+    process.exit(1);
+  } else {
+    throw err;
+  }
 });
 
 server.listen(PORT, () => {

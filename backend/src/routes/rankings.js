@@ -1,11 +1,12 @@
 const express = require('express');
 const { Ranking, UserProfile } = require('../models');
 const { authMiddleware } = require('../middleware/auth');
+const { withCache } = require('../utils/cache');
 
 const router = express.Router();
 
 // GET /api/rankings?sort=xp|certificates|time&limit=50
-router.get('/', async (req, res) => {
+router.get('/', withCache('rankings', 60), async (req, res) => {
   try {
     const { sort = 'xp', limit = 50 } = req.query;
 

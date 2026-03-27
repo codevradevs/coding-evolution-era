@@ -88,9 +88,19 @@ const securityHeaders = (req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
+  // Only lock down cache-control on auth/private routes — public GETs get browser caching
+  const isPrivate = req.path.startsWith('/api/auth') ||
+    req.path.startsWith('/api/vault') ||
+    req.path.startsWith('/api/profile') ||
+    req.path.startsWith('/api/tracker') ||
+    req.path.startsWith('/api/certificates');
+  if (isPrivate || req.method !== 'GET') {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  } else {
+    res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=30');
+  }
   res.removeHeader('X-Powered-By');
   next();
 };

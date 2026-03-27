@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { BlogPost } = require('../models');
+const { withCache } = require('../utils/cache');
 
-router.get('/', async (req, res) => {
+router.get('/', withCache('blogs', 120), async (req, res) => {
   try {
     const { category, page = 1, limit = 12, search, featured } = req.query;
     const query = {};
@@ -33,7 +34,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/categories', async (req, res) => {
+router.get('/categories', withCache('blogs:categories', 300), async (req, res) => {
   try {
     const categories = await BlogPost.distinct('category');
     res.json(categories);
@@ -42,7 +43,7 @@ router.get('/categories', async (req, res) => {
   }
 });
 
-router.get('/:slug', async (req, res) => {
+router.get('/:slug', withCache('blogs:slug', 120), async (req, res) => {
   try {
     const blog = await BlogPost.findOne({ slug: req.params.slug });
     if (!blog) return res.status(404).json({ error: 'Blog post not found' });
