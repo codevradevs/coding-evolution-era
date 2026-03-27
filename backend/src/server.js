@@ -1,10 +1,13 @@
 require('dotenv').config();
+const http = require('http');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const compression = require('compression');
 const session = require('express-session');
 const passport = require('./config/passport');
 const connectDB = require('./db/connection');
+const { Server } = require('socket.io');
 
 const {
   globalLimiter,
@@ -32,9 +35,46 @@ const blogsRoutes = require('./routes/blogs');
 const servicesRoutes = require('./routes/services');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
 connectDB();
+
+// ─── WebSockets (Socket.IO) ───────────────────────────────────────────────────
+const ALLOWED_ORIGINS = [
+  'https://codevra.co.ke',
+  'https://www.codevra.co.ke',
+  'https://admin.codevra.co.ke',
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:5174',
+];
+
+const io = new Server(server, {
+  cors: {
+    origin: ALLOWED_ORIGINS,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+  transports: ['websocket', 'polling'],
+});
+
+io.on('connection', (socket) => {
+  console.log(`[ws] connected: ${socket.id}`);
+
+  socket.on('join', (room) => socket.join(room));
+  socket.on('leave', (room) => socket.leave(room));
+
+  socket.on('disconnect', () => {
+    console.log(`[ws] disconnected: ${socket.id}`);
+  });
+});
+
+// Attach io to app so routes can emit events
+app.set('io', io);
+
+// ─── Compression ──────────────────────────────────────────────────────────────
+app.use(compression());
 
 // ─── Core Security Headers ────────────────────────────────────────────────────
 app.use(helmet({
@@ -86,6 +126,11 @@ app.use(hppProtection);
 // ─── Suspicious Request Detection ────────────────────────────────────────────
 app.use(suspiciousRequestDetector);
 
+// ─── Health Check (outside rate limiter — safe for uptime pings) ─────────────
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'Codevra API', ts: Date.now() });
+});
+
 // ─── Global Rate Limiter ──────────────────────────────────────────────────────
 app.use('/api/', globalLimiter);
 
@@ -94,7 +139,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  name: 'sid',  // don't expose default 'connect.sid' name
+  name: 'sid',
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
@@ -105,11 +150,6 @@ app.use(session({
 }));
 
 app.use(passport.initialize());
-
-// ─── Health Check (no auth, no rate limit) ───────────────────────────────────
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', service: 'Codevra API' });
-});
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
@@ -130,18 +170,17 @@ app.use('/api/services', servicesRoutes);
 // ─── 404 ──────────────────────────────────────────────────────────────────────
 app.use((req, res) => res.status(404).json({ error: 'Not found.' }));
 
-// ─── Global Error Handler (never leak stack traces) ──────────────────────────
+// ─── Global Error Handler ─────────────────────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error(`[error] ${err.message} — ${req.method} ${req.path} — IP: ${req.ip}`);
-  console.error(err.stack);
   if (err.message === 'Not allowed by CORS') {
     return res.status(403).json({ error: 'CORS policy violation.' });
   }
   res.status(err.status || 500).json({ error: err.message || 'Something went wrong.' });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Codevra API running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
 });
 
-module.exports = app;
+module.exports = { app, io };
