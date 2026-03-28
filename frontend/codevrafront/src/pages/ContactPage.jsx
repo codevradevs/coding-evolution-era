@@ -20,7 +20,7 @@ const socialLinks = [
   { icon: Facebook, label: 'Facebook', href: 'https://facebook.com/codevradevs', handle: 'Codevra Devs' },
   { icon: TikTokIcon, label: 'TikTok', href: 'https://tiktok.com/@codevradevs', handle: '@codevradevs' },
   { icon: Phone, label: 'WhatsApp', href: 'https://wa.me/254140710690', handle: '+254 140 710 690' },
-  { icon: Mail, label: 'Email', href: 'mailto:codevradevs@gmail.com', handle: 'codevradevs@gmail.com' },
+  { icon: Mail, label: 'Email', href: 'mailto:hello@codevra.co.ke', handle: 'hello@codevra.co.ke' },
 ];
 
 const projectTypes = ['SaaS Platform', 'E-Commerce', 'Web Application', 'Mobile App', 'API / Backend', 'Security Audit', 'M-Pesa Integration', 'Other'];

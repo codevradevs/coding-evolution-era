@@ -62,28 +62,25 @@ export default function HomePage() {
             From production-ready SaaS platforms to developer tooling ecosystems — Codevra engineers systems that perform, scale, and stay secure.
           </motion.p>
 
+          {/* Social proof — above the fold */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="flex flex-wrap items-center justify-center gap-6 mb-12"
+            className="flex flex-wrap items-center justify-center gap-8 mb-12"
           >
-            <div className="flex items-center gap-2 text-dark-300">
-              <div className="w-2 h-2 rounded-full bg-brand-400"></div>
-              <span className="text-sm font-medium">310+ Platform Modules</span>
-            </div>
-            <div className="flex items-center gap-2 text-dark-300">
-              <div className="w-2 h-2 rounded-full bg-accent-400"></div>
-              <span className="text-sm font-medium">110+ Services Available</span>
-            </div>
-            <div className="flex items-center gap-2 text-dark-300">
-              <div className="w-2 h-2 rounded-full bg-brand-400"></div>
-              <span className="text-sm font-medium">160+ Technical Articles</span>
-            </div>
-            <div className="flex items-center gap-2 text-dark-300">
-              <div className="w-2 h-2 rounded-full bg-accent-400"></div>
-              <span className="text-sm font-medium">Built in Kenya 🇰🇪</span>
-            </div>
+            {[
+              { value: '10+', label: 'Systems Delivered' },
+              { value: '3', label: 'Industries Served' },
+              { value: '100%', label: 'M-Pesa Integrated' },
+              { value: 'KES 80K+', label: 'Saved for Clients' },
+              { value: 'Built in Kenya 🇰🇪', label: 'African-First' },
+            ].map(s => (
+              <div key={s.label} className="text-center">
+                <div className="text-lg font-bold text-dark-100">{s.value}</div>
+                <div className="text-xs text-dark-500">{s.label}</div>
+              </div>
+            ))}
           </motion.div>
 
           <motion.div
@@ -267,6 +264,62 @@ export default function HomePage() {
             <Link to="/contact">
               <Button variant="outline" size="lg">Get a Free Quote</Button>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="relative py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold text-dark-100 mb-4">
+              What Clients <span className="gradient-text">Say</span>
+            </h2>
+          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                quote: "Codevra built our entire logistics platform in under 6 weeks. M-Pesa integration worked flawlessly from day one. Delivery delays dropped by 30% in the first month.",
+                name: "James M.",
+                role: "CEO, Tranzit Logistics",
+                emoji: "🚚",
+              },
+              {
+                quote: "Our school was drowning in paper. SchoolSync changed everything — fee collection, results, parent communication. The team understood exactly what we needed.",
+                name: "Principal Wanjiku",
+                role: "Nairobi Private Secondary School",
+                emoji: "🏫",
+              },
+              {
+                quote: "Finally a dev team that speaks our language. They didn't just build what we asked — they told us what we actually needed. PayFlow saved us 5 days of accounting every month.",
+                name: "Amina K.",
+                role: "Founder, E-Commerce Startup",
+                emoji: "💳",
+              },
+            ].map((t, i) => (
+              <motion.div
+                key={t.name}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="glass rounded-xl p-6 flex flex-col gap-4"
+              >
+                <p className="text-dark-300 text-sm leading-relaxed italic">"{t.quote}"</p>
+                <div className="flex items-center gap-3 mt-auto pt-4 border-t border-dark-700/30">
+                  <div className="w-10 h-10 rounded-full bg-brand-500/10 flex items-center justify-center text-xl">{t.emoji}</div>
+                  <div>
+                    <div className="text-sm font-semibold text-dark-100">{t.name}</div>
+                    <div className="text-xs text-dark-500">{t.role}</div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

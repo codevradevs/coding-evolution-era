@@ -46,7 +46,7 @@ const socialLinks = [
   { icon: Instagram, href: 'https://instagram.com/codevra_solutions', label: 'Instagram' },
   { icon: Facebook, href: 'https://facebook.com/codevradevs', label: 'Facebook' },
   { icon: TikTokIcon, href: 'https://tiktok.com/@codevradevs', label: 'TikTok' },
-  { icon: Mail, href: 'mailto:codevradevs@gmail.com', label: 'Email' },
+  { icon: Mail, href: 'mailto:hello@codevra.co.ke', label: 'Email' },
 ];
 
 export default function Footer() {
@@ -62,9 +62,9 @@ export default function Footer() {
               Integrated Digital Solutions for Kenyan Businesses. We build intelligent and secure systems for Kenyan businesses.
             </p>
             <div className="space-y-2 mb-6">
-              <a href="mailto:codevradevs@gmail.com" className="flex items-center gap-2 text-sm text-dark-400 hover:text-brand-400 transition-colors">
+              <a href="mailto:hello@codevra.co.ke" className="flex items-center gap-2 text-sm text-dark-400 hover:text-brand-400 transition-colors">
                 <Mail className="w-4 h-4" />
-                codevradevs@gmail.com
+                hello@codevra.co.ke
               </a>
               <a href="https://wa.me/254140710690" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-dark-400 hover:text-brand-400 transition-colors">
                 <Phone className="w-4 h-4" />

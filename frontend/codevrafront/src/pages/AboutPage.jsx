@@ -110,6 +110,44 @@ export default function AboutPage() {
 
       <section className="relative py-16 px-4">
         <div className="max-w-4xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-dark-100 mb-4">The <span className="gradient-text">Real Story</span></h2>
+            <p className="text-dark-400">Why Codevra exists — no corporate fluff.</p>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="glass rounded-xl p-8 space-y-5">
+            <p className="text-dark-200 text-lg font-semibold">
+              Codevra was started because Kenyan businesses were paying international dev rates for systems that didn't understand local infrastructure.
+            </p>
+            <p className="text-dark-400 leading-relaxed">
+              M-Pesa integrations that broke. School systems built on spreadsheets. Logistics companies running on WhatsApp groups. Businesses that needed real software but couldn't afford a London agency or trust a random Fiverr freelancer.
+            </p>
+            <p className="text-dark-400 leading-relaxed">
+              We've built logistics platforms that cut delivery delays by 30%. School systems that moved 1,200 students off paper. Payment dashboards that saved founders 5 days of manual accounting every month.
+            </p>
+            <p className="text-brand-300 font-semibold text-lg">
+              We build for Africa. We price for Africa. We understand the infrastructure, the payment rails, and the real problems.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-dark-700/30">
+              {[
+                { emoji: '🚚', title: 'Tranzit', desc: 'Logistics platform — 30% fewer delays' },
+                { emoji: '🏫', title: 'SchoolSync', desc: 'School system — 1,200 students' },
+                { emoji: '💳', title: 'PayFlow', desc: 'Payment dashboard — 5 days saved/month' },
+              ].map(p => (
+                <div key={p.title} className="flex items-center gap-3 p-3 rounded-lg bg-dark-800/30">
+                  <span className="text-2xl">{p.emoji}</span>
+                  <div>
+                    <div className="text-sm font-semibold text-dark-100">{p.title}</div>
+                    <div className="text-xs text-dark-500">{p.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="relative py-16 px-4">
+        <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
             <h2 className="text-3xl font-bold text-dark-100 mb-4">Why Codevra <span className="gradient-text">Had to Exist</span></h2>
           </motion.div>
