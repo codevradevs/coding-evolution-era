@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, ArrowRight, Terminal, Globe, Smartphone, CheckCircle, Shield, TrendingUp } from 'lucide-react';
+import { Zap, ArrowRight, Terminal, Globe, Smartphone, Shield, TrendingUp, Image } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import ModeToggle from '../components/ModeToggle';
 import ClientMode from '../components/ClientMode';
 import DeveloperMode from '../components/DeveloperMode';
+import api from '../lib/api';
 
 const webHighlights = [
   { icon: '🪶', title: 'Basic Website', range: 'KES 10K – 50K' },
@@ -21,6 +22,13 @@ const appHighlights = [
 
 export default function HomePage() {
   const [mode, setMode] = useState('client');
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+
+  useEffect(() => {
+    api.get('/projects?featured=true')
+      .then(({ data }) => setFeaturedProjects(data.slice(0, 3)))
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="relative">
@@ -267,6 +275,46 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Featured Projects Preview */}
+      {featuredProjects.length > 0 && (
+        <section className="relative py-20 px-4">
+          <div className="max-w-5xl mx-auto">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl font-bold text-dark-100 mb-4">
+                Featured <span className="gradient-text">Projects</span>
+              </h2>
+              <p className="text-dark-400 max-w-2xl mx-auto">Real systems we've built for real businesses.</p>
+            </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {featuredProjects.map((project, i) => (
+                <motion.div key={project._id} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                  className="glass rounded-xl overflow-hidden hover:border-brand-500/20 transition-all duration-300 group flex flex-col">
+                  <Link to={`/projects/${project.slug}`} className="block relative aspect-video overflow-hidden bg-dark-800/50">
+                    {project.coverImage
+                      ? <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      : <div className="w-full h-full flex items-center justify-center"><Image className="w-8 h-8 text-dark-700" /></div>
+                    }
+                    <div className="absolute inset-0 bg-gradient-to-t from-dark-950/60 to-transparent" />
+                    <span className="absolute top-3 left-3 px-2 py-0.5 rounded text-xs font-medium bg-brand-500/80 text-white backdrop-blur-sm">Featured</span>
+                  </Link>
+                  <div className="p-4 flex flex-col flex-1">
+                    <Link to={`/projects/${project.slug}`} className="font-bold text-dark-100 hover:text-brand-400 transition mb-1">{project.title}</Link>
+                    <p className="text-xs text-dark-500 mb-2">{project.industry}</p>
+                    <p className="text-sm text-dark-400 line-clamp-2 flex-1">{project.description}</p>
+                    <Link to={`/projects/${project.slug}`} className="flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300 transition mt-3 font-medium">
+                      View Case Study <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            <div className="text-center">
+              <Link to="/projects"><Button variant="outline" size="lg">View All Projects <ArrowRight className="w-4 h-4" /></Button></Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Testimonials */}
       <section className="relative py-20 px-4">

@@ -11,6 +11,7 @@ import ContactsPage from './pages/ContactsPage'
 import TipsPage from './pages/TipsPage'
 import ChallengesPage from './pages/ChallengesPage'
 import ProductsPage from './pages/ProductsPage'
+import ProjectsPage from './pages/ProjectsPage'
 import CertificatesPage from './pages/CertificatesPage'
 import QuotesPage from './pages/QuotesPage'
 import { SubmissionsPage, VaultPage, TrackerPage, NetworkPage, UserProfilesPage } from './pages/DataPages'
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="/tips"        element={<ProtectedRoute><TipsPage /></ProtectedRoute>} />
           <Route path="/challenges"  element={<ProtectedRoute><ChallengesPage /></ProtectedRoute>} />
           <Route path="/products"    element={<ProtectedRoute><ProductsPage /></ProtectedRoute>} />
+          <Route path="/projects"    element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
           <Route path="/certificates" element={<ProtectedRoute><CertificatesPage /></ProtectedRoute>} />
           <Route path="/quotes"      element={<ProtectedRoute><QuotesPage /></ProtectedRoute>} />
           <Route path="/submissions" element={<ProtectedRoute><SubmissionsPage /></ProtectedRoute>} />

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const {
   User, BlogPost, Challenge, Tip, Product, Certificate,
   ServiceQuote, Submission, VaultNote, TrackerItem,
-  NetworkProfile, UserProfile, Ranking, ContactMessage,
+  NetworkProfile, UserProfile, Ranking, ContactMessage, Project,
 } = require('../models');
 
 const router = express.Router();
@@ -359,6 +359,55 @@ router.put('/rankings/:id', async (req, res) => {
 router.delete('/rankings/:id', async (req, res) => {
   try {
     await Ranking.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Deleted.' });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ─── Projects ────────────────────────────────────────────────────────────────
+router.get('/projects', async (req, res) => {
+  try {
+    const { page = 1, limit = 20, search } = req.query;
+    const q = search ? { $or: [{ title: { $regex: search, $options: 'i' } }, { industry: { $regex: search, $options: 'i' } }] } : {};
+    const [projects, total] = await Promise.all([
+      Project.find(q).sort({ order: 1, createdAt: -1 }).skip((page - 1) * limit).limit(Number(limit)).select('-images'),
+      Project.countDocuments(q),
+    ]);
+    res.json({ projects, total });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+router.get('/projects/:id', async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ error: 'Not found.' });
+    res.json(project);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+router.post('/projects', async (req, res) => {
+  try {
+    const { title, slug, tagline, description } = req.body;
+    if (!title || !slug || !tagline || !description) return res.status(400).json({ error: 'Missing required fields.' });
+    const images = req.body.images || [];
+    if (images.length > 20) return res.status(400).json({ error: 'Maximum 20 images allowed.' });
+    const project = await Project.create(req.body);
+    res.status(201).json(project);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+router.put('/projects/:id', async (req, res) => {
+  try {
+    const images = req.body.images || [];
+    if (images.length > 20) return res.status(400).json({ error: 'Maximum 20 images allowed.' });
+    const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!project) return res.status(404).json({ error: 'Not found.' });
+    res.json(project);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+router.delete('/projects/:id', async (req, res) => {
+  try {
+    await Project.findByIdAndDelete(req.params.id);
     res.json({ message: 'Deleted.' });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

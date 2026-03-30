@@ -3,7 +3,7 @@ import { useAuth } from '../context/useAuth'
 import {
   LayoutDashboard, Users, Trophy, BookOpen, LogOut, Shield, Zap,
   MessageSquare, Lightbulb, Code2, Package, Award, Briefcase,
-  FileCode, Lock, BookMarked, Network, UserCircle
+  FileCode, Lock, BookMarked, Network, UserCircle, FolderKanban
 } from 'lucide-react'
 
 const SECTIONS = [
@@ -25,10 +25,11 @@ const SECTIONS = [
   {
     label: 'Content',
     links: [
-      { to: '/blogs',      icon: BookOpen,  label: 'Blogs' },
-      { to: '/tips',       icon: Lightbulb, label: 'Dev Tips' },
-      { to: '/challenges', icon: Code2,     label: 'Challenges' },
-      { to: '/products',   icon: Package,   label: 'Products' },
+      { to: '/blogs',      icon: BookOpen,       label: 'Blogs' },
+      { to: '/tips',       icon: Lightbulb,      label: 'Dev Tips' },
+      { to: '/challenges', icon: Code2,          label: 'Challenges' },
+      { to: '/products',   icon: Package,        label: 'Products' },
+      { to: '/projects',   icon: FolderKanban,   label: 'Projects' },
     ]
   },
   {

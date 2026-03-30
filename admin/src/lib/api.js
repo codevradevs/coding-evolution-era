@@ -100,6 +100,13 @@ export const adminApi = {
   getContacts:    (params = {}) => api.get('/admin/contacts',    { params }),
   deleteContact:  (id)          => api.delete(`/admin/contacts/${id}`),
 
+  // Projects
+  getProjects:    (params = {}) => api.get('/admin/projects',    { params }),
+  getProject:     (id)          => api.get(`/admin/projects/${id}`),
+  createProject:  (data)        => api.post('/admin/projects',   data),
+  updateProject:  (id, data)    => api.put(`/admin/projects/${id}`, data),
+  deleteProject:  (id)          => api.delete(`/admin/projects/${id}`),
+
   // Blog categories (public)
   getBlogCategories: () => api.get('/blogs/categories'),
 }

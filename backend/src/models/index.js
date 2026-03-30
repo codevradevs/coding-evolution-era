@@ -160,6 +160,29 @@ const certificateSchema = new mongoose.Schema({
   credentialId: { type: String, unique: true },
 }, { timestamps: true });
 
+const projectSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  slug: { type: String, required: true, unique: true },
+  tagline: { type: String, required: true },
+  description: { type: String, required: true },
+  category: { type: String, enum: ['web', 'mobile', 'security', 'experiment'], default: 'web' },
+  status: { type: String, default: 'Live' },
+  client: { type: String, default: '' },
+  industry: { type: String, default: '' },
+  tech: [String],
+  liveUrl: { type: String, default: '' },
+  githubUrl: { type: String, default: '' },
+  featured: { type: Boolean, default: false },
+  images: { type: [String], validate: { validator: v => v.length <= 20, message: 'Max 20 images allowed' } },
+  coverImage: { type: String, default: '' },
+  problem: { type: String, default: '' },
+  solution: { type: String, default: '' },
+  architecture: { type: String, default: '' },
+  lessons: { type: String, default: '' },
+  results: [{ metric: String, label: String }],
+  order: { type: Number, default: 0 },
+}, { timestamps: true });
+
 const rankingSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
   xp: { type: Number, default: 0 },
@@ -171,6 +194,7 @@ const rankingSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 }, { timestamps: true });
 
+const Project = mongoose.model('Project', projectSchema);
 const User = mongoose.model('User', userSchema);
 const VaultNote = mongoose.model('VaultNote', vaultNoteSchema);
 const Challenge = mongoose.model('Challenge', challengeSchema);
@@ -191,6 +215,7 @@ const Ranking = mongoose.model('Ranking', rankingSchema);
 module.exports = {
   User,
   UserProfile,
+  Project,
   Certificate,
   Ranking,
   VaultNote,

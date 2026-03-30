@@ -108,7 +108,10 @@ const securityHeaders = (req, res, next) => {
 // ─── Request Size Guard ───────────────────────────────────────────────────────
 const requestSizeGuard = (req, res, next) => {
   const contentLength = parseInt(req.headers['content-length'] || '0', 10);
-  if (contentLength > 1 * 1024 * 1024) {
+  // Admin project uploads can contain up to 20 base64 images (~10MB)
+  const isProjectUpload = req.path.startsWith('/api/admin/projects');
+  const limit = isProjectUpload ? 12 * 1024 * 1024 : 1 * 1024 * 1024;
+  if (contentLength > limit) {
     return res.status(413).json({ error: 'Request payload too large.' });
   }
   next();
@@ -125,8 +128,10 @@ const SUSPICIOUS_PATTERNS = [
 ];
 
 const suspiciousRequestDetector = (req, res, next) => {
+  // Skip body scanning for project image uploads — base64 data triggers false positives
+  const isProjectUpload = req.path.startsWith('/api/admin/projects') && req.method !== 'GET';
   const toCheck = [
-    JSON.stringify(req.body || {}),
+    isProjectUpload ? '{}' : JSON.stringify(req.body || {}),
     JSON.stringify(req.query || {}),
     req.path,
     req.headers['user-agent'] || '',

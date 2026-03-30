@@ -34,6 +34,7 @@ const certificateRoutes = require('./routes/certificates');
 const rankingsRoutes = require('./routes/rankings');
 const blogsRoutes = require('./routes/blogs');
 const servicesRoutes = require('./routes/services');
+const projectsRoutes = require('./routes/projects');
 
 const app = express();
 const server = http.createServer(app);
@@ -115,8 +116,8 @@ app.set('trust proxy', 1);
 
 // ─── Body Parsing (strict limits) ────────────────────────────────────────────
 app.use(requestSizeGuard);
-app.use(express.json({ limit: '100kb' }));
-app.use(express.urlencoded({ extended: true, limit: '100kb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ─── NoSQL Injection Prevention ───────────────────────────────────────────────
 app.use(noSQLSanitize);
@@ -168,6 +169,7 @@ app.use('/api/certificates', certificateRoutes);
 app.use('/api/rankings', rankingsRoutes);
 app.use('/api/blogs', blogsRoutes);
 app.use('/api/services', servicesRoutes);
+app.use('/api/projects', projectsRoutes);
 
 // ─── 404 ──────────────────────────────────────────────────────────────────────
 app.use((req, res) => res.status(404).json({ error: 'Not found.' }));
