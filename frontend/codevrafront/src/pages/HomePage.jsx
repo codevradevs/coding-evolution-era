@@ -309,9 +309,22 @@ export default function HomePage() {
                 </motion.div>
               ))}
             </div>
-            <div className="text-center">
-              <Link to="/projects"><Button variant="outline" size="lg">View All Projects <ArrowRight className="w-4 h-4" /></Button></Link>
-            </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="glass rounded-2xl p-8 text-center border border-brand-500/30 mt-4">
+              <h3 className="text-xl font-bold text-dark-100 mb-2">Want a system like this?</h3>
+              <p className="text-dark-400 text-sm mb-6 max-w-md mx-auto">Tell us your problem. We'll scope it, price it, and build it.</p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link to="/contact">
+                  <Button size="lg" className="group">
+                    Start Your Project
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+                <Link to="/projects">
+                  <Button variant="outline" size="lg">View All Projects</Button>
+                </Link>
+              </div>
+            </motion.div>
           </div>
         </section>
       )}
