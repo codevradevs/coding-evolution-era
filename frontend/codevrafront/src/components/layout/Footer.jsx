@@ -32,8 +32,8 @@ const footerSections = [
   {
     title: 'Resources',
     links: [
-      { label: 'Security Blog', href: '/blog?category=security' },
-      { label: 'Build Logs', href: '/blog?category=build-logs' },
+      { label: 'Security Blog', href: '/blog', state: { category: 'Security' } },
+      { label: 'Build Logs', href: '/blog', state: { category: 'Build Logs' } },
       { label: 'API Docs', href: '/docs' },
       { label: 'Open Source', href: 'https://github.com/codevradevs', external: true },
     ],
@@ -112,6 +112,7 @@ export default function Footer() {
                     ) : (
                       <Link
                         to={link.href}
+                        state={link.state}
                         className="text-sm text-dark-400 hover:text-brand-400 transition-colors"
                       >
                         {link.label}

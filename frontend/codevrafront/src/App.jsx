@@ -37,8 +37,8 @@ import AuthCallbackPage from './pages/AuthCallbackPage';
 import './index.css';
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  const { pathname, search } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname, search]);
   return null;
 }
 

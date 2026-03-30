@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Clock, Calendar, ChevronRight, BookOpen } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 export default function BlogsPage() {
+  const location = useLocation();
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('All Posts');
+  const [selectedCategory, setSelectedCategory] = useState(location.state?.category || 'All Posts');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -20,6 +21,7 @@ export default function BlogsPage() {
   }, []);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchBlogs();
   }, [selectedCategory, currentPage, searchQuery]);
 

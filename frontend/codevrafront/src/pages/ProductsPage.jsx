@@ -57,6 +57,7 @@ export default function ProductsPage() {
   }, []);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchProducts();
   }, [selectedCategory, currentPage, searchQuery]);
 
