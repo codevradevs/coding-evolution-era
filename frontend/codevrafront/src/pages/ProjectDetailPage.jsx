@@ -5,6 +5,38 @@ import { ExternalLink, Github, ArrowLeft, ChevronLeft, ChevronRight, X, Layers }
 import { Button } from '../components/ui/Button';
 import api from '../lib/api';
 
+function RichText({ text, className = '' }) {
+  if (!text) return null;
+  const lines = text.split('\n');
+  return (
+    <div className={`space-y-1.5 ${className}`}>
+      {lines.map((line, i) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={i} className="h-2" />;
+        const isBullet = /^[-*•]\s/.test(trimmed);
+        const isNumbered = /^\d+\.\s/.test(trimmed);
+        if (isBullet) return (
+          <div key={i} className="flex gap-2">
+            <span className="text-brand-400 mt-0.5 shrink-0">▸</span>
+            <span className="text-sm text-dark-300 leading-relaxed">{trimmed.replace(/^[-*•]\s/, '')}</span>
+          </div>
+        );
+        if (isNumbered) return (
+          <div key={i} className="flex gap-2">
+            <span className="text-brand-400 font-mono text-xs mt-0.5 shrink-0 w-4">{trimmed.match(/^\d+/)[0]}.</span>
+            <span className="text-sm text-dark-300 leading-relaxed">{trimmed.replace(/^\d+\.\s/, '')}</span>
+          </div>
+        );
+        const isSectionHeader = trimmed.endsWith(':') && trimmed.length < 60 && !trimmed.includes('.');
+        if (isSectionHeader) return (
+          <p key={i} className="text-xs font-semibold text-dark-400 uppercase tracking-wider pt-1">{trimmed}</p>
+        );
+        return <p key={i} className="text-sm text-dark-300 leading-relaxed">{trimmed}</p>;
+      })}
+    </div>
+  );
+}
+
 export default function ProjectDetailPage() {
   const { slug } = useParams();
   const [project, setProject] = useState(null);
@@ -159,23 +191,23 @@ export default function ProjectDetailPage() {
                 {project.problem && (
                   <div>
                     <span className="text-xs font-semibold text-red-400 uppercase tracking-wider">The Problem</span>
-                    <p className="text-sm text-dark-300 mt-2 leading-relaxed">{project.problem}</p>
+                    <RichText text={project.problem} className="mt-2" />
                   </div>
                 )}
                 {project.solution && (
                   <div>
                     <span className="text-xs font-semibold text-brand-400 uppercase tracking-wider">Our Solution</span>
-                    <p className="text-sm text-dark-300 mt-2 leading-relaxed">{project.solution}</p>
+                    <RichText text={project.solution} className="mt-2" />
                   </div>
                 )}
                 {project.architecture && (
                   <div>
                     <span className="text-xs font-semibold text-dark-500 uppercase tracking-wider">Architecture</span>
-                    <p className="text-sm text-dark-300 mt-2 leading-relaxed">{project.architecture}</p>
+                    <RichText text={project.architecture} className="mt-2" />
                     {project.lessons && (
                       <div className="mt-3 pt-3 border-t border-dark-700/30">
                         <span className="text-xs font-semibold text-dark-500 uppercase tracking-wider">Key Lesson</span>
-                        <p className="text-xs text-dark-400 mt-1 italic">{project.lessons}</p>
+                        <RichText text={project.lessons} className="mt-1" />
                       </div>
                     )}
                   </div>

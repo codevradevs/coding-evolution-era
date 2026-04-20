@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codevra — All Posters</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #020617;
+  color: #f1f5f9;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(2,6,23,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(34,197,94,0.15);
+  padding: 16px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #22c55e, #a855f7);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px; font-weight: 700; color: #020617;
+}
+.nav-logo-text {
+  font-size: 20px; font-weight: 800;
+  background: linear-gradient(90deg, #4ade80, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.nav-links { display: flex; gap: 8px; }
+.nav-link {
+  padding: 8px 16px; border-radius: 8px;
+  font-size: 13px; font-weight: 600;
+  color: #64748b; text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  cursor: pointer; background: none;
+  font-family: 'Inter', sans-serif;
+}
+.nav-link:hover, .nav-link.active {
+  color: #4ade80;
+  border-color: rgba(34,197,94,0.3);
+  background: rgba(34,197,94,0.08);
+}
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+  padding: 80px 40px 60px;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(34,197,94,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.25);
+  padding: 8px 20px; border-radius: 50px;
+  font-size: 12px; font-weight: 600; color: #4ade80;
+  text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 24px;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: #22c55e; border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+.hero h1 { font-size: 56px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+.hero h1 span {
+  background: linear-gradient(90deg, #4ade80, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero p { font-size: 18px; color: #64748b; }
+
+/* ── FILTER TABS ── */
+.filter-bar {
+  display: flex; justify-content: center; gap: 12px;
+  padding: 0 40px 50px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 10px 24px; border-radius: 50px;
+  font-size: 14px; font-weight: 600;
+  color: #64748b; background: rgba(15,23,42,0.6);
+  border: 1px solid rgba(100,116,139,0.2);
+  cursor: pointer; transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.filter-btn:hover { color: #4ade80; border-color: rgba(34,197,94,0.3); }
+.filter-btn.active {
+  color: #020617; background: linear-gradient(135deg, #22c55e, #16a34a);
+  border-color: transparent;
+}
+
+/* ── GRID ── */
+.posters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 40px;
+  padding: 0 40px 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── IFRAME PREVIEW ── */
+.preview-wrapper {
+  width: 100%;
+  aspect-ratio: 1080 / 1920;
+  overflow: hidden;
+  position: relative;
+  background: #020617;
+}
+.preview-wrapper iframe {
+  width: 1080px;
+  height: 1920px;
+  border: none;
+  transform-origin: top left;
+  transform: scale(var(--scale));
+  pointer-events: none;
+  display: block;
+}
+
+/* ── POSTER CARD ── */
+.poster-card {
+  background: rgba(15,23,42,0.6);
+  border: 1px solid rgba(100,116,139,0.2);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+.poster-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,197,94,0.2);
+  border-color: rgba(34,197,94,0.3);
+}
+.poster-card[data-category="services"]:hover { border-color: rgba(168,85,247,0.3); box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(168,85,247,0.2); }
+.poster-card[data-category="why"]:hover { border-color: rgba(168,85,247,0.3); }
+
+.card-header {
+  padding: 20px 24px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(100,116,139,0.1);
+}
+.card-meta { display: flex; align-items: center; gap: 12px; }
+.card-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: #334155; font-weight: 700;
+}
+.card-title { font-size: 16px; font-weight: 700; color: #e2e8f0; }
+.card-tag {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  padding: 4px 10px; border-radius: 20px;
+}
+.tag-products { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+.tag-services { background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.25); }
+.tag-projects { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid rgba(96,165,250,0.25); }
+.tag-why { background: rgba(251,146,60,0.15); color: #fb923c; border: 1px solid rgba(251,146,60,0.25); }
+
+.card-actions { display: flex; gap: 8px; }
+.btn-open, .btn-download {
+  padding: 7px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; text-decoration: none;
+  transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Inter', sans-serif; border: none;
+}
+.btn-open {
+  background: rgba(34,197,94,0.15); color: #4ade80;
+  border: 1px solid rgba(34,197,94,0.25);
+}
+.btn-open:hover { background: rgba(34,197,94,0.25); }
+.btn-download {
+  background: rgba(100,116,139,0.15); color: #94a3b8;
+  border: 1px solid rgba(100,116,139,0.2);
+}
+.btn-download:hover { background: rgba(100,116,139,0.25); }
+
+
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 40px;
+  border-top: 1px solid rgba(100,116,139,0.1);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; color: #334155;
+}
+footer span { color: #4ade80; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">&lt;/&gt;</div>
+    <div class="nav-logo-text">Codevra</div>
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="filterPosters('all', this)">All Posters</button>
+    <button class="nav-link" onclick="filterPosters('products', this)">Products</button>
+    <button class="nav-link" onclick="filterPosters('services', this)">Services</button>
+    <button class="nav-link" onclick="filterPosters('projects', this)">Projects</button>
+    <button class="nav-link" onclick="filterPosters('why', this)">Why Us</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">Marketing Assets</div>
+  <h1>Codevra <span>Poster Collection</span></h1>
+  <p>4 social-ready posters · 1080 × 1350px · Click Open to view full size</p>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterPosters('all', this)">All (4)</button>
+  <button class="filter-btn" onclick="filterPosters('products', this)">🌐 Products</button>
+  <button class="filter-btn" onclick="filterPosters('services', this)">💼 Services</button>
+  <button class="filter-btn" onclick="filterPosters('projects', this)">🚀 Projects</button>
+  <button class="filter-btn" onclick="filterPosters('why', this)">⭐ Why Us</button>
+</div>
+
+<div class="posters-grid" id="postersGrid">
+
+  <!-- Poster 1 -->
+  <div class="poster-card" data-category="products">
+    <div class="card-header">
+      <div class="card-meta">
+        <span class="card-num">01</span>
+        <span class="card-title">Products Ecosystem</span>
+        <span class="card-tag tag-products">Products</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn-open" href="poster1_products.html" target="_blank">⛶ Open</a>
+        <a class="btn-download" href="poster1_products.html" download>↓ Download</a>
+      </div>
+    </div>
+    <div class="preview-wrapper" id="pw0">
+      <iframe src="poster1_products.html" scrolling="no" title="Products Ecosystem"></iframe>
+    </div>
+  </div>
+
+  <!-- Poster 2 -->
+  <div class="poster-card" data-category="services">
+    <div class="card-header">
+      <div class="card-meta">
+        <span class="card-num">02</span>
+        <span class="card-title">Services &amp; Packages</span>
+        <span class="card-tag tag-services">Services</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn-open" href="poster2_services.html" target="_blank">⛶ Open</a>
+        <a class="btn-download" href="poster2_services.html" download>↓ Download</a>
+      </div>
+    </div>
+    <div class="preview-wrapper" id="pw1">
+      <iframe src="poster2_services.html" scrolling="no" title="Services &amp; Packages"></iframe>
+    </div>
+  </div>
+
+  <!-- Poster 3 -->
+  <div class="poster-card" data-category="projects">
+    <div class="card-header">
+      <div class="card-meta">
+        <span class="card-num">03</span>
+        <span class="card-title">Projects Showcase</span>
+        <span class="card-tag tag-projects">Projects</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn-open" href="poster3_projects.html" target="_blank">⛶ Open</a>
+        <a class="btn-download" href="poster3_projects.html" download>↓ Download</a>
+      </div>
+    </div>
+    <div class="preview-wrapper" id="pw2">
+      <iframe src="poster3_projects.html" scrolling="no" title="Projects Showcase"></iframe>
+    </div>
+  </div>
+
+  <!-- Poster 4 -->
+  <div class="poster-card" data-category="why">
+    <div class="card-header">
+      <div class="card-meta">
+        <span class="card-num">04</span>
+        <span class="card-title">Why Codevra</span>
+        <span class="card-tag tag-why">Why Us</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn-open" href="poster4_why.html" target="_blank">⛶ Open</a>
+        <a class="btn-download" href="poster4_why.html" download>↓ Download</a>
+      </div>
+    </div>
+    <div class="preview-wrapper" id="pw3">
+      <iframe src="poster4_why.html" scrolling="no" title="Why Codevra"></iframe>
+    </div>
+  </div>
+
+</div>
+
+
+<footer>
+  &lt;<span>Codevra Poster Collection</span> · 4 posters · 1080×1350px /&gt;
+</footer>
+
+<script>
+function setScales() {
+  document.querySelectorAll('.preview-wrapper').forEach(pw => {
+    const scale = pw.offsetWidth / 1080;
+    pw.style.setProperty('--scale', scale);
+  });
+}
+window.addEventListener('load', setScales);
+window.addEventListener('resize', setScales);
+
+function filterPosters(cat, btn) {
+  // update all filter buttons (both nav and filter bar)
+  document.querySelectorAll('.nav-link, .filter-btn').forEach(b => b.classList.remove('active'));
+  // activate matching buttons
+  document.querySelectorAll('.nav-link, .filter-btn').forEach(b => {
+    if (b.getAttribute('onclick') === btn.getAttribute('onclick')) b.classList.add('active');
+  });
+  document.querySelectorAll('.poster-card').forEach(card => {
+    card.style.display = (cat === 'all' || card.dataset.category === cat) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

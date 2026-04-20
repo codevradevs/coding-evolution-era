@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1080px;
+  height: 1350px;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  background: #020617;
+}
+.poster {
+  width: 1080px;
+  height: 1350px;
+  background: linear-gradient(180deg, #020617 0%, #0f172a 30%, #1e1b4b 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(34,197,94,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(168,85,247,0.1) 0%, transparent 50%);
+}
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(34,197,94,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,197,94,0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+.code-float {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: rgba(74,222,128,0.1);
+  white-space: pre;
+}
+.code-1 { top: 10%; left: 5%; }
+.code-2 { top: 20%; right: 5%; }
+.code-3 { bottom: 30%; left: 3%; }
+.content {
+  position: relative;
+  z-index: 10;
+  padding: 60px 70px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.header { text-align: center; margin-bottom: 50px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(168,85,247,0.15);
+  border: 1px solid rgba(168,85,247,0.3);
+  padding: 10px 24px; border-radius: 50px;
+  font-size: 14px; font-weight: 600; color: #c084fc;
+  text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px;
+}
+.headline { font-size: 64px; font-weight: 900; line-height: 1.1; color: #f1f5f9; margin-bottom: 15px; }
+.headline .gradient {
+  background: linear-gradient(90deg, #4ade80, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.subheadline { font-size: 22px; color: #94a3b8; }
+.arrow-path {
+  display: flex; align-items: center; justify-content: center; gap: 20px;
+  margin: 30px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px; color: #64748b;
+}
+.arrow-path span { color: #4ade80; font-weight: 700; }
+.arrow { color: #a855f7; font-size: 24px; }
+.pricing-container { display: flex; gap: 25px; justify-content: center; margin-bottom: 40px; }
+.pricing-card {
+  background: rgba(15,23,42,0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(100,116,139,0.3);
+  border-radius: 20px;
+  padding: 35px 30px;
+  width: 310px;
+  position: relative;
+}
+.pricing-card.featured {
+  background: rgba(15,23,42,0.8);
+  border: 2px solid rgba(34,197,94,0.5);
+  box-shadow: 0 20px 60px rgba(34,197,94,0.2);
+  transform: scale(1.05);
+}
+.popular-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #020617; padding: 6px 20px; border-radius: 20px;
+  font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+}
+.card-header {
+  text-align: center; margin-bottom: 25px; padding-bottom: 20px;
+  border-bottom: 1px solid rgba(100,116,139,0.2);
+}
+.package-name { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+.starter .package-name { color: #4ade80; }
+.growth .package-name { color: #60a5fa; }
+.premium .package-name { color: #f87171; }
+.price { font-size: 42px; font-weight: 900; color: #f1f5f9; }
+.price span { font-size: 16px; font-weight: 500; color: #64748b; }
+.features-list { list-style: none; }
+.features-list li {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 15px; font-size: 15px; color: #cbd5e1;
+}
+.features-list li::before {
+  content: '✓';
+  width: 22px; height: 22px;
+  background: rgba(34,197,94,0.15); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #4ade80; font-weight: 700; font-size: 12px; flex-shrink: 0;
+}
+.tech-stack {
+  background: rgba(15,23,42,0.5);
+  border: 1px solid rgba(100,116,139,0.2);
+  border-radius: 12px; padding: 20px;
+  text-align: center; margin-bottom: 35px;
+}
+.tech-label { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: #64748b; margin-bottom: 12px; }
+.tech-items { font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #94a3b8; word-spacing: 15px; }
+.tech-items span { color: #4ade80; }
+.why-section { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+.why-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #e2e8f0; }
+.why-item::before { content: '⚡'; font-size: 18px; }
+.cta-container { text-align: center; margin-top: auto; }
+.cta {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #020617; padding: 22px 50px; border-radius: 14px;
+  font-size: 22px; font-weight: 800; text-decoration: none;
+  box-shadow: 0 15px 50px rgba(34,197,94,0.4);
+}
+.footer-tagline { margin-top: 25px; font-family: 'JetBrains Mono', monospace; font-size: 16px; color: #64748b; }
+.footer-tagline span { color: #a855f7; }
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="bg-pattern"></div>
+  <div class="grid-overlay"></div>
+  <div class="code-float code-1">&lt;React /&gt;  &lt;Node /&gt;  &lt;PostgreSQL /&gt;</div>
+  <div class="code-float code-2">const scale = async () =&gt; { }</div>
+  <div class="code-float code-3">docker build -t future .</div>
+  <div class="content">
+    <div class="header">
+      <div class="badge">Services &amp; Packages</div>
+      <h1 class="headline">
+        You Bring the Idea.<br>
+        <span class="gradient">We Build the Machine.</span>
+      </h1>
+      <p class="subheadline">From concept to launch — we handle everything.</p>
+    </div>
+    <div class="arrow-path">
+      <span>Idea</span>
+      <span class="arrow">→</span>
+      <span>Product</span>
+      <span class="arrow">→</span>
+      <span>Scale</span>
+    </div>
+    <div class="pricing-container">
+      <div class="pricing-card starter">
+        <div class="card-header">
+          <div class="package-name">🟢 Starter</div>
+          <div class="price">KES 30K<span>+</span></div>
+        </div>
+        <ul class="features-list">
+          <li>Static Website</li>
+          <li>Domain + Hosting</li>
+          <li>SEO Basics</li>
+          <li>Contact System</li>
+        </ul>
+      </div>
+      <div class="pricing-card growth featured">
+        <div class="popular-badge">Most Popular</div>
+        <div class="card-header">
+          <div class="package-name">🔵 Growth</div>
+          <div class="price">KES 100K<span>+</span></div>
+        </div>
+        <ul class="features-list">
+          <li>Full Web Application</li>
+          <li>M-Pesa Integration</li>
+          <li>Analytics Dashboard</li>
+          <li>3 Months Support</li>
+        </ul>
+      </div>
+      <div class="pricing-card premium">
+        <div class="card-header">
+          <div class="package-name">🔴 Premium</div>
+          <div class="price">KES 300K<span>+</span></div>
+        </div>
+        <ul class="features-list">
+          <li>Web + Mobile App</li>
+          <li>AI Features</li>
+          <li>Security Audit</li>
+          <li>Long-Term Scaling</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tech-stack">
+      <div class="tech-label">Tech Stack</div>
+      <div class="tech-items">
+        <span>React</span> • Node • <span>PostgreSQL</span> • Flutter • <span>AWS</span> • M-Pesa • <span>OpenAI</span>
+      </div>
+    </div>
+    <div class="why-section">
+      <div class="why-item">MVPs in Days</div>
+      <div class="why-item">Security First</div>
+      <div class="why-item">Built to Scale</div>
+      <div class="why-item">WhatsApp Support</div>
+    </div>
+    <div class="cta-container">
+      <a href="#" class="cta">Start Your Project →</a>
+      <div class="footer-tagline">&lt;Ship Fast. <span>Scale Faster.</span> /&gt;</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

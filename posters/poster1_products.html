@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1080px;
+  height: 1350px;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  background: #020617;
+}
+.poster {
+  width: 1080px;
+  height: 1350px;
+  background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(34,197,94,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,197,94,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; }
+.orb-1 { width: 400px; height: 400px; background: #22c55e; top: -100px; right: -100px; }
+.orb-2 { width: 300px; height: 300px; background: #a855f7; bottom: 200px; left: -100px; }
+.orb-3 { width: 200px; height: 200px; background: #22c55e; bottom: -50px; right: 200px; opacity: 0.2; }
+.content {
+  position: relative;
+  z-index: 10;
+  padding: 60px 80px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.logo-area { display: flex; align-items: center; gap: 15px; margin-bottom: 50px; }
+.logo-icon {
+  width: 50px; height: 50px;
+  background: linear-gradient(135deg, #22c55e, #a855f7);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; font-weight: 700; color: #020617;
+}
+.logo-text {
+  font-size: 28px; font-weight: 800;
+  background: linear-gradient(90deg, #4ade80, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(34,197,94,0.15);
+  border: 1px solid rgba(34,197,94,0.3);
+  padding: 10px 20px; border-radius: 50px;
+  font-size: 14px; font-weight: 600; color: #4ade80;
+  text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 30px; width: fit-content;
+}
+.badge::before {
+  content: '';
+  width: 8px; height: 8px;
+  background: #22c55e; border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+.headline { font-size: 72px; font-weight: 900; line-height: 1.1; color: #f1f5f9; margin-bottom: 20px; }
+.headline .gradient {
+  background: linear-gradient(90deg, #4ade80, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.subheadline { font-size: 24px; color: #94a3b8; margin-bottom: 60px; max-width: 600px; line-height: 1.5; }
+.ecosystem {
+  flex: 1; display: flex; align-items: center; justify-content: center; position: relative;
+}
+.center-node {
+  width: 180px; height: 180px;
+  background: rgba(15,23,42,0.8);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(34,197,94,0.5);
+  border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; z-index: 20;
+  box-shadow: 0 0 40px rgba(34,197,94,0.3);
+}
+.center-node .icon { font-size: 40px; margin-bottom: 8px; }
+.center-node .text { font-size: 16px; font-weight: 700; color: #4ade80; text-align: center; }
+.satellite-node {
+  position: absolute;
+  background: rgba(15,23,42,0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(168,85,247,0.4);
+  padding: 15px 20px; border-radius: 12px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; font-weight: 600; color: #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.satellite-node .icon { font-size: 20px; }
+.node-1 { top: 10%; left: 50%; transform: translateX(-50%); }
+.node-2 { top: 25%; right: 10%; }
+.node-3 { top: 50%; right: 5%; transform: translateY(-50%); }
+.node-4 { bottom: 25%; right: 10%; }
+.node-5 { bottom: 10%; left: 50%; transform: translateX(-50%); }
+.node-6 { bottom: 25%; left: 10%; }
+.node-7 { top: 50%; left: 5%; transform: translateY(-50%); }
+.node-8 { top: 25%; left: 10%; }
+.bottom-section { margin-top: auto; }
+.features { display: flex; gap: 30px; margin-bottom: 40px; flex-wrap: wrap; }
+.feature { display: flex; align-items: center; gap: 10px; font-size: 16px; color: #cbd5e1; }
+.feature::before {
+  content: '✓';
+  width: 24px; height: 24px;
+  background: rgba(34,197,94,0.2); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #4ade80; font-weight: 700; font-size: 14px;
+}
+.cta {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #020617; padding: 20px 40px; border-radius: 12px;
+  font-size: 20px; font-weight: 700; text-decoration: none;
+  box-shadow: 0 10px 40px rgba(34,197,94,0.4);
+}
+.footer-text {
+  margin-top: 30px; font-size: 16px; color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+}
+.footer-text span { color: #4ade80; }
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="content">
+    <div class="logo-area">
+      <div class="logo-icon">&lt;/&gt;</div>
+      <div class="logo-text">Codevra</div>
+    </div>
+    <div class="badge">Digital Products Ecosystem</div>
+    <h1 class="headline">
+      We Don't Sell One Thing.<br>
+      <span class="gradient">We Build Entire Digital Ecosystems.</span>
+    </h1>
+    <p class="subheadline">From SaaS platforms to AI systems — we engineer everything your business needs to scale.</p>
+    <div class="ecosystem">
+      <div class="center-node">
+        <div class="icon">⚡</div>
+        <div class="text">Codevra<br>Core</div>
+      </div>
+      <div class="satellite-node node-1"><span class="icon">🌐</span><span>Web Solutions</span></div>
+      <div class="satellite-node node-2"><span class="icon">📱</span><span>Mobile Apps</span></div>
+      <div class="satellite-node node-3"><span class="icon">🤖</span><span>AI Systems</span></div>
+      <div class="satellite-node node-4"><span class="icon">🛡️</span><span>Cyber Defense</span></div>
+      <div class="satellite-node node-5"><span class="icon">📊</span><span>Data Intelligence</span></div>
+      <div class="satellite-node node-6"><span class="icon">💰</span><span>M-Pesa Integration</span></div>
+      <div class="satellite-node node-7"><span class="icon">⚡</span><span>Automation</span></div>
+      <div class="satellite-node node-8"><span class="icon">📈</span><span>Analytics &amp; BI</span></div>
+    </div>
+    <div class="bottom-section">
+      <div class="features">
+        <div class="feature">Custom Built</div>
+        <div class="feature">API-First Architecture</div>
+        <div class="feature">Scalable Infrastructure</div>
+        <div class="feature">Secure by Default</div>
+      </div>
+      <a href="#" class="cta">Explore Our Products →</a>
+      <div class="footer-text">&lt;<span>Building Africa's Digital Infrastructure Layer</span> /&gt;</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

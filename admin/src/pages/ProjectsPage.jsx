@@ -151,16 +151,16 @@ function ProjectForm({ value, onChange, onSubmit, loading, error }) {
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Case Study Details</p>
         <div className="space-y-3">
           <Field label="The Problem">
-            <Textarea rows={2} placeholder="What problem did the client have?" value={value.problem} onChange={e => onChange('problem', e.target.value)} />
+            <Textarea rows={5} placeholder={`Paste bullet points or plain text:\n- Landlords have no structured way to verify tenant reliability\n- Tenants with good payment history cannot prove it`} value={value.problem} onChange={e => onChange('problem', e.target.value)} />
           </Field>
           <Field label="Our Solution">
-            <Textarea rows={2} placeholder="How did you solve it?" value={value.solution} onChange={e => onChange('solution', e.target.value)} />
+            <Textarea rows={5} placeholder={`Paste bullet points or plain text:\n- Rent Payment Tracking\n  Records and verifies rent payments over time`} value={value.solution} onChange={e => onChange('solution', e.target.value)} />
           </Field>
           <Field label="Architecture">
-            <Textarea rows={2} placeholder="Tech architecture overview..." value={value.architecture} onChange={e => onChange('architecture', e.target.value)} />
+            <Textarea rows={5} placeholder={`Paste bullet points or plain text:\n- Frontend (React)\n  Dashboard-driven UI for tenants and landlords`} value={value.architecture} onChange={e => onChange('architecture', e.target.value)} />
           </Field>
           <Field label="Key Lesson">
-            <Input placeholder="What did you learn?" value={value.lessons} onChange={e => onChange('lessons', e.target.value)} />
+            <Textarea rows={3} placeholder="What did you learn? Can be multi-line." value={value.lessons} onChange={e => onChange('lessons', e.target.value)} />
           </Field>
           <Field label="Results (one per line: metric|label)">
             <Textarea rows={4} placeholder={`30%|Reduction in delays\n3x|Faster payments\nKES 80K|Saved annually`} value={value.results} onChange={e => onChange('results', e.target.value)} />

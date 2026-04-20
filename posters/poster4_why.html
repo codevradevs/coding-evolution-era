@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1080px;
+  height: 1350px;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  background: #020617;
+}
+.poster {
+  width: 1080px;
+  height: 1350px;
+  background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1a0a2e 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(168,85,247,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168,85,247,0.03) 1px, transparent 1px);
+  background-size: 45px 45px;
+}
+.orb-1 {
+  position: absolute;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 70%);
+  top: -150px; left: -150px;
+}
+.orb-2 {
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%);
+  bottom: -100px; right: -100px;
+}
+.content {
+  position: relative;
+  z-index: 10;
+  padding: 60px 80px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.logo-area { display: flex; align-items: center; gap: 15px; margin-bottom: 50px; }
+.logo-icon {
+  width: 50px; height: 50px;
+  background: linear-gradient(135deg, #a855f7, #22c55e);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; font-weight: 700; color: #020617;
+}
+.logo-text {
+  font-size: 28px; font-weight: 800;
+  background: linear-gradient(90deg, #a855f7, #4ade80);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(168,85,247,0.15);
+  border: 1px solid rgba(168,85,247,0.3);
+  padding: 10px 20px; border-radius: 50px;
+  font-size: 14px; font-weight: 600; color: #c084fc;
+  text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 30px; width: fit-content;
+}
+.headline { font-size: 72px; font-weight: 900; line-height: 1.1; color: #f1f5f9; margin-bottom: 20px; }
+.headline .gradient {
+  background: linear-gradient(90deg, #a855f7, #4ade80);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.subheadline { font-size: 22px; color: #94a3b8; margin-bottom: 60px; line-height: 1.5; }
+.reasons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin-bottom: 50px;
+}
+.reason-card {
+  background: rgba(15,23,42,0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(100,116,139,0.2);
+  border-radius: 20px;
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+}
+.reason-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #a855f7, #22c55e);
+}
+.reason-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px; font-weight: 900;
+  color: rgba(168,85,247,0.15);
+  position: absolute; top: 15px; right: 20px;
+  line-height: 1;
+}
+.reason-icon { font-size: 36px; margin-bottom: 15px; }
+.reason-title { font-size: 22px; font-weight: 800; color: #f1f5f9; margin-bottom: 10px; }
+.reason-desc { font-size: 15px; color: #94a3b8; line-height: 1.6; }
+.metrics-row {
+  display: flex;
+  gap: 0;
+  margin-bottom: 50px;
+  background: rgba(15,23,42,0.5);
+  border: 1px solid rgba(100,116,139,0.2);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.metric {
+  flex: 1;
+  padding: 25px 30px;
+  text-align: center;
+  border-right: 1px solid rgba(100,116,139,0.15);
+}
+.metric:last-child { border-right: none; }
+.metric-val {
+  font-size: 36px; font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  background: linear-gradient(90deg, #4ade80, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 6px;
+}
+.metric-label { font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+.cta-block { margin-top: auto; display: flex; align-items: center; justify-content: space-between; }
+.cta {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: #fff; padding: 22px 50px; border-radius: 14px;
+  font-size: 22px; font-weight: 800; text-decoration: none;
+  box-shadow: 0 15px 50px rgba(168,85,247,0.4);
+}
+.contact-info { text-align: right; }
+.contact-line { font-size: 16px; color: #94a3b8; margin-bottom: 8px; }
+.contact-line span { color: #4ade80; font-weight: 600; }
+.footer-text {
+  margin-top: 30px; font-size: 16px; color: #64748b;
+  font-family: 'JetBrains Mono', monospace; text-align: center;
+}
+.footer-text span { color: #a855f7; }
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="bg-grid"></div>
+  <div class="orb-1"></div>
+  <div class="orb-2"></div>
+  <div class="content">
+    <div class="logo-area">
+      <div class="logo-icon">&lt;/&gt;</div>
+      <div class="logo-text">Codevra</div>
+    </div>
+    <div class="badge">Why Choose Us</div>
+    <h1 class="headline">
+      Not Just Developers.<br>
+      <span class="gradient">Your Tech Partners.</span>
+    </h1>
+    <p class="subheadline">We don't just write code — we build businesses. Here's why Africa's best startups choose Codevra.</p>
+    <div class="reasons-grid">
+      <div class="reason-card">
+        <div class="reason-number">01</div>
+        <div class="reason-icon">⚡</div>
+        <div class="reason-title">Ship Fast</div>
+        <div class="reason-desc">MVPs delivered in days, not months. We move at startup speed without cutting corners on quality.</div>
+      </div>
+      <div class="reason-card">
+        <div class="reason-number">02</div>
+        <div class="reason-icon">🛡️</div>
+        <div class="reason-title">Security First</div>
+        <div class="reason-desc">Every product ships with security baked in — JWT auth, encrypted storage, and penetration testing.</div>
+      </div>
+      <div class="reason-card">
+        <div class="reason-number">03</div>
+        <div class="reason-icon">📈</div>
+        <div class="reason-title">Built to Scale</div>
+        <div class="reason-desc">Cloud-native architecture on AWS. Your product grows from 10 to 10 million users without breaking.</div>
+      </div>
+      <div class="reason-card">
+        <div class="reason-number">04</div>
+        <div class="reason-icon">🤝</div>
+        <div class="reason-title">Full Partnership</div>
+        <div class="reason-desc">We stay with you post-launch. WhatsApp support, monthly updates, and long-term scaling plans.</div>
+      </div>
+    </div>
+    <div class="metrics-row">
+      <div class="metric">
+        <div class="metric-val">3+</div>
+        <div class="metric-label">Live Products</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">100%</div>
+        <div class="metric-label">Client Retention</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">48hr</div>
+        <div class="metric-label">Avg Response</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">KES 80K+</div>
+        <div class="metric-label">Client Savings</div>
+      </div>
+    </div>
+    <div class="cta-block">
+      <a href="#" class="cta">Work With Us →</a>
+      <div class="contact-info">
+        <div class="contact-line">📧 <span>hello@codevra.com</span></div>
+        <div class="contact-line">💬 <span>WhatsApp Available</span></div>
+        <div class="contact-line">🌍 <span>codevra.com</span></div>
+      </div>
+    </div>
+    <div class="footer-text">&lt;<span>Africa's Digital Infrastructure Layer</span> /&gt;</div>
+  </div>
+</div>
+</body>
+</html>
