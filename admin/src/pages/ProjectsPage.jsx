@@ -12,6 +12,18 @@ const EMPTY = {
   architecture: '', lessons: '', results: '', order: 0,
 }
 
+// Normalize pasted prose into newline-separated lines before saving
+function normalizeCaseStudyText(text) {
+  if (!text) return '';
+  if (text.includes('\n')) return text; // already formatted
+  return text
+    .replace(/([a-z,\.!?])\s+([A-Z][a-z])/g, '$1\n$2')
+    .replace(/([a-z,\.!?])\s+(👉|✅|⚡|🔥|💡)/g, '$1\n$2')
+    .replace(/(\w):\s+([A-Z])/g, '$1:\n$2')
+    .replace(/([.!?])\s+([A-Z])/g, '$1\n$2')
+    .trim();
+}
+
 function slugify(str) {
   return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }
@@ -228,6 +240,10 @@ export default function ProjectsPage() {
     const payload = {
       ...form,
       tech: form.tech.split(',').map(s => s.trim()).filter(Boolean),
+      problem: normalizeCaseStudyText(form.problem),
+      solution: normalizeCaseStudyText(form.solution),
+      architecture: normalizeCaseStudyText(form.architecture),
+      lessons: normalizeCaseStudyText(form.lessons),
       results: form.results ? form.results.split('\n').map(s => {
         const [metric, ...rest] = s.trim().split('|')
         return { metric: metric?.trim(), label: rest.join('|').trim() }

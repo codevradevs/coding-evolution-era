@@ -5,14 +5,29 @@ import { ExternalLink, Github, ArrowLeft, ChevronLeft, ChevronRight, X, Layers }
 import { Button } from '../components/ui/Button';
 import api from '../lib/api';
 
+// Splits prose blob into lines by detecting capitalized-word boundaries and colons
+function parseToLines(text) {
+  if (!text) return [];
+  // Already has newlines — use them directly
+  if (text.includes('\n')) return text.split('\n');
+  // Prose blob: split before capitalized words/phrases that follow lowercase endings
+  // e.g. "...data Landlords have" → "...data\nLandlords have"
+  return text
+    .replace(/([a-z,\.!?])\s+([A-Z][a-z])/g, '$1\n$2')   // lowercase end → Capital start
+    .replace(/([a-z,\.!?])\s+(👉|✅|⚡|🔥|💡)/g, '$1\n$2') // emoji markers
+    .replace(/(\w):\s+([A-Z])/g, '$1:\n$2')               // "word: Capital"
+    .replace(/([.!?])\s+([A-Z])/g, '$1\n$2')              // sentence end → new sentence
+    .split('\n');
+}
+
 function RichText({ text, className = '' }) {
   if (!text) return null;
-  const lines = text.split('\n');
+  const lines = parseToLines(text);
   return (
     <div className={`space-y-1.5 ${className}`}>
       {lines.map((line, i) => {
         const trimmed = line.trim();
-        if (!trimmed) return <div key={i} className="h-2" />;
+        if (!trimmed) return <div key={i} className="h-1" />;
         const isBullet = /^[-*•]\s/.test(trimmed);
         const isNumbered = /^\d+\.\s/.test(trimmed);
         if (isBullet) return (
@@ -27,9 +42,18 @@ function RichText({ text, className = '' }) {
             <span className="text-sm text-dark-300 leading-relaxed">{trimmed.replace(/^\d+\.\s/, '')}</span>
           </div>
         );
-        const isSectionHeader = trimmed.endsWith(':') && trimmed.length < 60 && !trimmed.includes('.');
+        // Short line ending with colon = sub-header (e.g. "Core components:", "Result:")
+        const isSectionHeader = trimmed.endsWith(':') && trimmed.length < 80 && !/[.!?]/.test(trimmed.slice(0, -1));
         if (isSectionHeader) return (
-          <p key={i} className="text-xs font-semibold text-dark-400 uppercase tracking-wider pt-1">{trimmed}</p>
+          <p key={i} className="text-xs font-semibold text-brand-400/80 uppercase tracking-wider pt-2">{trimmed.slice(0, -1)}</p>
+        );
+        // Short standalone capitalized phrase (likely a component/feature name)
+        const isLabel = trimmed.length < 60 && /^[A-Z]/.test(trimmed) && !/[.!?,]$/.test(trimmed) && trimmed.split(' ').length <= 6;
+        if (isLabel) return (
+          <div key={i} className="flex gap-2">
+            <span className="text-brand-400 mt-0.5 shrink-0">▸</span>
+            <span className="text-sm text-dark-300 font-medium leading-relaxed">{trimmed}</span>
+          </div>
         );
         return <p key={i} className="text-sm text-dark-300 leading-relaxed">{trimmed}</p>;
       })}
