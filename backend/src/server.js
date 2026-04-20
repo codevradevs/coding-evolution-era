@@ -116,8 +116,14 @@ app.set('trust proxy', 1);
 
 // ─── Body Parsing (strict limits) ────────────────────────────────────────────
 app.use(requestSizeGuard);
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use((req, res, next) => {
+  const isProjectUpload = req.path.startsWith('/api/admin/projects');
+  express.json({ limit: isProjectUpload ? '25mb' : '10mb' })(req, res, next);
+});
+app.use((req, res, next) => {
+  const isProjectUpload = req.path.startsWith('/api/admin/projects');
+  express.urlencoded({ extended: true, limit: isProjectUpload ? '25mb' : '10mb' })(req, res, next);
+});
 
 // ─── NoSQL Injection Prevention ───────────────────────────────────────────────
 app.use(noSQLSanitize);

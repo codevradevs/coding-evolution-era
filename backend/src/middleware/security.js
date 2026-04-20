@@ -108,9 +108,8 @@ const securityHeaders = (req, res, next) => {
 // ─── Request Size Guard ───────────────────────────────────────────────────────
 const requestSizeGuard = (req, res, next) => {
   const contentLength = parseInt(req.headers['content-length'] || '0', 10);
-  // Admin project uploads can contain up to 20 base64 images (~10MB)
   const isProjectUpload = req.path.startsWith('/api/admin/projects');
-  const limit = isProjectUpload ? 12 * 1024 * 1024 : 1 * 1024 * 1024;
+  const limit = isProjectUpload ? 25 * 1024 * 1024 : 1 * 1024 * 1024;
   if (contentLength > limit) {
     return res.status(413).json({ error: 'Request payload too large.' });
   }
