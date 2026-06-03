@@ -139,6 +139,22 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'Codevra API', ts: Date.now() });
 });
 
+// ─── Email Test (remove after confirming emails work) ────────────────────────
+app.get('/test-email', async (req, res) => {
+  const { sendContactEmails } = require('./utils/mailer');
+  try {
+    await sendContactEmails({
+      name: 'Test User',
+      email: process.env.GMAIL_USER,
+      subject: 'Email Test',
+      message: 'If you receive this, emails are working correctly.',
+    });
+    res.json({ ok: true, message: 'Test email sent — check your Gmail inbox.' });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
 // ─── Global Rate Limiter ──────────────────────────────────────────────────────
 app.use('/api/', globalLimiter);
 
