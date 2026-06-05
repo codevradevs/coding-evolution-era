@@ -18,10 +18,10 @@ dns.resolve4('smtp.gmail.com', (err, addrs) => {
 });
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
+  host: '142.251.188.108',
   port: 465,
   secure: true,
-  family: 4,
+  tls: { servername: 'smtp.gmail.com' },
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
