@@ -8,7 +8,7 @@ if (!process.env.RESEND_API_KEY) {
 console.log('[mailer] RESEND_API_KEY set:', !!process.env.RESEND_API_KEY);
 console.log('[mailer] FROM email:', process.env.RESEND_FROM || 'NOT SET');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const FROM = process.env.RESEND_FROM || 'Codevra <hello@codevra.co.ke>';
 
@@ -23,6 +23,7 @@ function getRoutingEmail(subject = '') {
 }
 
 async function sendContactEmails({ name, email, subject, message }) {
+  if (!resend) return console.error('[mailer] Skipping — RESEND_API_KEY not set.');
   const isIntake = subject?.startsWith('Project Intake');
   const routeTo = getRoutingEmail(subject);
 
@@ -72,6 +73,7 @@ async function sendContactEmails({ name, email, subject, message }) {
 }
 
 async function sendServiceQuoteEmail({ name, email, company, serviceTitle, requirements, proposal }) {
+  if (!resend) return console.error('[mailer] Skipping — RESEND_API_KEY not set.');
   const notifyMail = resend.emails.send({
     from: FROM,
     to: process.env.EMAIL_SALES || 'sales@codevra.co.ke',
@@ -120,6 +122,7 @@ async function sendServiceQuoteEmail({ name, email, company, serviceTitle, requi
 }
 
 async function sendPasswordResetEmail({ name, email, resetLink }) {
+  if (!resend) return console.error('[mailer] Skipping — RESEND_API_KEY not set.');
   await resend.emails.send({
     from: FROM,
     to: email,
