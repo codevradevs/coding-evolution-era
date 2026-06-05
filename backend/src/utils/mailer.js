@@ -1,55 +1,33 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const twilio = require('twilio');
-const dns = require('dns');
-dns.setDefaultResultOrder('ipv4first');
 
-if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-  console.warn('[mailer] WARNING: GMAIL_USER or GMAIL_APP_PASSWORD not set — emails will not be sent.');
+if (!process.env.RESEND_API_KEY) {
+  console.warn('[mailer] WARNING: RESEND_API_KEY not set — emails will not be sent.');
 }
 
-console.log('[mailer] GMAIL_USER:', process.env.GMAIL_USER || 'NOT SET');
-console.log('[mailer] GMAIL_APP_PASSWORD set:', !!process.env.GMAIL_APP_PASSWORD);
-console.log('[mailer] DNS order: ipv4first');
+console.log('[mailer] RESEND_API_KEY set:', !!process.env.RESEND_API_KEY);
+console.log('[mailer] FROM email:', process.env.RESEND_FROM || 'NOT SET');
 
-// Resolve smtp.gmail.com at startup to confirm IPv4
-dns.resolve4('smtp.gmail.com', (err, addrs) => {
-  if (err) console.error('[mailer] DNS resolve4 failed:', err.message);
-  else console.log('[mailer] smtp.gmail.com IPv4 addresses:', addrs);
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const transporter = nodemailer.createTransport({
-  host: '142.251.188.108',
-  port: 465,
-  secure: true,
-  tls: { servername: 'smtp.gmail.com' },
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-});
+const FROM = process.env.RESEND_FROM || 'Codevra <hello@codevra.co.ke>';
 
-transporter.verify((err, ok) => {
-  if (err) console.error('[mailer] SMTP verify failed:', err.message);
-  else console.log('[mailer] SMTP connection verified ✅');
-});
-
-// Route to the right role-based inbox
 function getRoutingEmail(subject = '') {
   const s = subject.toLowerCase();
-  if (s.startsWith('project intake')) return process.env.EMAIL_SALES || process.env.GMAIL_USER;
-  if (s.includes('partnership') || s.includes('media') || s.includes('press')) return process.env.EMAIL_PARTNERSHIPS || process.env.GMAIL_USER;
-  if (s.includes('career') || s.includes('job') || s.includes('hiring')) return process.env.EMAIL_CAREERS || process.env.GMAIL_USER;
-  if (s.includes('bug') || s.includes('api') || s.includes('technical') || s.includes('dev')) return process.env.EMAIL_DEV || process.env.GMAIL_USER;
-  if (s.includes('support') || s.includes('help') || s.includes('issue')) return process.env.EMAIL_SUPPORT || process.env.GMAIL_USER;
-  return process.env.EMAIL_HELLO || process.env.GMAIL_USER;
+  if (s.startsWith('project intake')) return process.env.EMAIL_SALES || 'sales@codevra.co.ke';
+  if (s.includes('partnership') || s.includes('media') || s.includes('press')) return process.env.EMAIL_PARTNERSHIPS || 'partnerships@codevra.co.ke';
+  if (s.includes('career') || s.includes('job') || s.includes('hiring')) return process.env.EMAIL_CAREERS || 'careers@codevra.co.ke';
+  if (s.includes('bug') || s.includes('api') || s.includes('technical') || s.includes('dev')) return process.env.EMAIL_DEV || 'dev@codevra.co.ke';
+  if (s.includes('support') || s.includes('help') || s.includes('issue')) return process.env.EMAIL_SUPPORT || 'support@codevra.co.ke';
+  return process.env.EMAIL_HELLO || 'hello@codevra.co.ke';
 }
 
 async function sendContactEmails({ name, email, subject, message }) {
   const isIntake = subject?.startsWith('Project Intake');
   const routeTo = getRoutingEmail(subject);
 
-  const notifyMail = transporter.sendMail({
-    from: `"Codevra Contact" <${process.env.GMAIL_USER}>`,
+  const notifyMail = resend.emails.send({
+    from: FROM,
     to: routeTo,
     subject: `📬 New ${isIntake ? 'Project Intake' : 'Message'}: ${subject}`,
     html: `
@@ -71,8 +49,8 @@ async function sendContactEmails({ name, email, subject, message }) {
     `,
   }).catch(err => console.error('[mailer] Notify email failed:', err.message));
 
-  const autoReply = transporter.sendMail({
-    from: `"Codevra" <${process.env.GMAIL_USER}>`,
+  const autoReply = resend.emails.send({
+    from: FROM,
     replyTo: routeTo,
     to: email,
     subject: `We received your message — Codevra`,
@@ -94,9 +72,9 @@ async function sendContactEmails({ name, email, subject, message }) {
 }
 
 async function sendServiceQuoteEmail({ name, email, company, serviceTitle, requirements, proposal }) {
-  const notifyMail = transporter.sendMail({
-    from: `"Codevra Services" <${process.env.GMAIL_USER}>`,
-    to: process.env.EMAIL_SALES || process.env.GMAIL_USER,
+  const notifyMail = resend.emails.send({
+    from: FROM,
+    to: process.env.EMAIL_SALES || 'sales@codevra.co.ke',
     subject: `💼 New Service Quote: ${serviceTitle}`,
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:24px;background:#0f0f0f;color:#e5e5e5;border-radius:12px;">
@@ -120,8 +98,8 @@ async function sendServiceQuoteEmail({ name, email, company, serviceTitle, requi
     `,
   }).catch(err => console.error('[mailer] Service quote notify failed:', err.message));
 
-  const autoReply = transporter.sendMail({
-    from: `"Codevra Devs" <${process.env.GMAIL_USER}>`,
+  const autoReply = resend.emails.send({
+    from: FROM,
     to: email,
     subject: `Your quote for ${serviceTitle} — Codevra Devs`,
     html: `
@@ -142,8 +120,8 @@ async function sendServiceQuoteEmail({ name, email, company, serviceTitle, requi
 }
 
 async function sendPasswordResetEmail({ name, email, resetLink }) {
-  await transporter.sendMail({
-    from: `"Codevra Devs" <${process.env.GMAIL_USER}>`,
+  await resend.emails.send({
+    from: FROM,
     to: email,
     subject: `Reset your Codevra password`,
     html: `
@@ -173,20 +151,13 @@ async function sendWhatsAppNotification(body) {
     return;
   }
 
-  console.log(`[whatsapp] Sending to ${to} from ${from}...`);
-
   const client = twilio(accountSid, authToken);
   try {
     const msg = await client.messages.create({ from, to, body });
     console.log(`[whatsapp] ✅ Sent successfully. SID: ${msg.sid}`);
   } catch (err) {
     console.error(`[whatsapp] ❌ Failed — Code: ${err.code}, Message: ${err.message}`);
-    if (err.code === 63007 || err.code === 21608) {
-      console.error('[whatsapp] ⚠️  Your number has not joined the Twilio sandbox.');
-      console.error('[whatsapp] ⚠️  Send "join <sandbox-word>" from WhatsApp to +14155238886 to activate.');
-    }
   }
 }
 
 module.exports = { sendContactEmails, sendPasswordResetEmail, sendServiceQuoteEmail, sendWhatsAppNotification };
-
