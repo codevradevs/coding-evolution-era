@@ -7,15 +7,30 @@ if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
   console.warn('[mailer] WARNING: GMAIL_USER or GMAIL_APP_PASSWORD not set — emails will not be sent.');
 }
 
+console.log('[mailer] GMAIL_USER:', process.env.GMAIL_USER || 'NOT SET');
+console.log('[mailer] GMAIL_APP_PASSWORD set:', !!process.env.GMAIL_APP_PASSWORD);
+console.log('[mailer] DNS order: ipv4first');
+
+// Resolve smtp.gmail.com at startup to confirm IPv4
+dns.resolve4('smtp.gmail.com', (err, addrs) => {
+  if (err) console.error('[mailer] DNS resolve4 failed:', err.message);
+  else console.log('[mailer] smtp.gmail.com IPv4 addresses:', addrs);
+});
+
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
   secure: true,
-  family: 4, // force IPv4
+  family: 4,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
+});
+
+transporter.verify((err, ok) => {
+  if (err) console.error('[mailer] SMTP verify failed:', err.message);
+  else console.log('[mailer] SMTP connection verified ✅');
 });
 
 // Route to the right role-based inbox
