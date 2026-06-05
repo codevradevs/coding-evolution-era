@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer');
 const twilio = require('twilio');
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
 
 if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
   console.warn('[mailer] WARNING: GMAIL_USER or GMAIL_APP_PASSWORD not set — emails will not be sent.');
