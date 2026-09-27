@@ -8,7 +8,7 @@ const tools = [
   { icon: Lock, title: 'Secure Vault', desc: 'AES-256 encrypted note storage', href: '/hub/vault', emoji: '🔐' },
   { icon: Puzzle, title: 'Code Arena', desc: 'XP system + leaderboard challenges', href: '/hub/arena', emoji: '🧩' },
   { icon: TrendingUp, title: 'Learning Tracker', desc: 'Track courses, skills, streaks', href: '/hub/tracker', emoji: '📈' },
-  { icon: Globe, title: 'Startup Network', desc: 'Connect with African founders', href: '/hub/network', emoji: '🌍' }
+  { icon: Globe, title: 'Startup Network', desc: 'Connect with founders worldwide', href: '/hub/network', emoji: '🌐' }
 ];
 
 const badges = [
@@ -23,7 +23,7 @@ const badges = [
 const philosophy = [
   'Systems > Scripts',
   'Security by Default',
-  'African-First Infrastructure',
+  'Global-First Infrastructure',
   'Ship Fast. Harden Faster.'
 ];
 
@@ -190,7 +190,7 @@ export default function DeveloperMode() {
               <ul className="space-y-2 text-dark-400 mb-6">
                 <li>• 40 Security Deep Dives</li>
                 <li>• 30 Build Logs</li>
-                <li>• 35 African Tech Articles</li>
+                <li>• 35 Global Tech Articles</li>
                 <li>• 55 Productivity & Analysis</li>
               </ul>
               <Link to="/blog">
@@ -257,7 +257,7 @@ export default function DeveloperMode() {
             <Trophy className="w-12 h-12 text-accent-400 mx-auto mb-6" />
             <h2 className="text-3xl font-bold text-dark-100 mb-4">Join the Ecosystem</h2>
             <p className="text-dark-400 mb-8 max-w-lg mx-auto">
-              Level up your dev skills. Build real systems. Connect with African innovators.
+              Level up your dev skills. Build real systems. Connect with innovators worldwide.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/auth/register">

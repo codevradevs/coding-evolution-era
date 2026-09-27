@@ -16,7 +16,7 @@ const packages = [
     icon: '🟢',
     desc: 'Perfect for getting online fast.',
     includes: ['Basic website', 'Domain + hosting setup', 'SEO basics', 'Contact form'],
-    price: 'From KES 30,000',
+    price: 'From $230',
     cta: 'Get Started',
   },
   {
@@ -24,8 +24,8 @@ const packages = [
     color: 'accent',
     icon: '🔵',
     desc: 'For businesses ready to scale.',
-    includes: ['Dynamic website or app', 'M-Pesa integration', 'Analytics setup', '3 months maintenance'],
-    price: 'From KES 100,000',
+    includes: ['Dynamic website or app', 'Payment integration', 'Analytics setup', '3 months maintenance'],
+    price: 'From $780',
     cta: 'Scale Up',
     popular: true,
   },
@@ -35,7 +35,7 @@ const packages = [
     icon: '🔴',
     desc: 'Full-stack digital product, end to end.',
     includes: ['Full web app or mobile app', 'AI features', 'Security audit', 'Ongoing support'],
-    price: 'From KES 300,000',
+    price: 'From $2,300',
     cta: 'Go Premium',
   },
 ];
@@ -44,7 +44,7 @@ const whyCodevra = [
   { icon: Zap, label: 'Fast Turnaround', desc: 'MVPs in days, not months' },
   { icon: Shield, label: 'Security First', desc: 'bcrypt, JWT, rate limiting by default' },
   { icon: TrendingUp, label: 'Built to Scale', desc: 'Architecture that grows with you' },
-  { icon: MessageCircle, label: 'Local Support', desc: "WhatsApp, call, or email — we're here" },
+  { icon: MessageCircle, label: 'Global Support', desc: 'Chat, call, or email — we’re here' },
 ];
 
 const tabs = [
@@ -85,7 +85,7 @@ function ServiceCard({ service, i, onQuote }) {
       <div className="border-t border-dark-700/50 pt-4">
         <div className="text-xs text-dark-500 mb-0.5">Starting from</div>
         <div className="text-brand-400 font-bold text-lg mb-3">{service.price}</div>
-        <div className="text-xs text-dark-500 mb-3">Range: KES {service.range}</div>
+        <div className="text-xs text-dark-500 mb-3">Range: ${service.range}</div>
         <Button size="sm" className="w-full" onClick={() => onQuote(service)}>Get Quote</Button>
       </div>
     </motion.div>
@@ -123,7 +123,7 @@ export default function ServicesPage() {
   const closeModal = () => { setSelected(null); setGeneratedProposal(''); setSubmitSuccess(false); setSubmitError(''); };
 
   const generateProposal = () => {
-    setGeneratedProposal(`PROJECT PROPOSAL\n\nClient: ${proposalData.name}\nCompany: ${proposalData.company || 'N/A'}\nEmail: ${proposalData.email}\n\nSERVICE REQUESTED\n${selected.title}\n\nOVERVIEW\n${selected.desc}\n\nKEY DELIVERABLES\n${selected.features.map((f, i) => `${i + 1}. ${f}`).join('\n')}\n\nCLIENT REQUIREMENTS\n${proposalData.requirements}\n\nPRICING\nStarting from: ${selected.price}\nRange: KES ${selected.range}\n\nNEXT STEPS\n1. Review and approve this proposal\n2. Sign service agreement\n3. Initial payment (50% deposit)\n4. Project kickoff meeting\n5. Development & delivery\n\nThis proposal is valid for 30 days.`);
+    setGeneratedProposal(`PROJECT PROPOSAL\n\nClient: ${proposalData.name}\nCompany: ${proposalData.company || 'N/A'}\nEmail: ${proposalData.email}\n\nSERVICE REQUESTED\n${selected.title}\n\nOVERVIEW\n${selected.desc}\n\nKEY DELIVERABLES\n${selected.features.map((f, i) => `${i + 1}. ${f}`).join('\n')}\n\nCLIENT REQUIREMENTS\n${proposalData.requirements}\n\nPRICING\nStarting from: ${selected.price}\nRange: $${selected.range}\n\nNEXT STEPS\n1. Review and approve this proposal\n2. Sign service agreement\n3. Initial payment (50% deposit)\n4. Project kickoff meeting\n5. Development & delivery\n\nThis proposal is valid for 30 days.`);
   };
 
   const sendProposal = async () => {
@@ -161,13 +161,13 @@ export default function ServicesPage() {
           <motion.div {...fadeUp(0)} className="mb-4">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-brand text-brand-400 text-xs font-medium">
               <Zap className="w-3.5 h-3.5" />
-              Kenyan Market Pricing · No Hidden Fees · Built in Africa 🇰🇪
+              Transparent Pricing · No Hidden Fees · Built to Scale
             </span>
           </motion.div>
           <motion.h1 {...fadeUp(0.1)} className="text-5xl sm:text-6xl font-bold tracking-tight mb-4">
             <span className="gradient-text">Digital Services</span>
             <br />
-            <span className="text-dark-100">Built for Africa.</span>
+            <span className="text-dark-100">Built for the World.</span>
           </motion.h1>
           <motion.p {...fadeUp(0.2)} className="text-lg text-dark-400 max-w-2xl mx-auto mb-8">
             We design, build, secure, and scale digital products — from simple websites to full enterprise platforms.
@@ -179,8 +179,8 @@ export default function ServicesPage() {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <a href="https://wa.me/254700000000" target="_blank" rel="noreferrer">
-              <Button variant="secondary" size="xl">WhatsApp Us 💬</Button>
+            <a href="https://wa.me/254140710690" target="_blank" rel="noreferrer">
+              <Button variant="secondary" size="xl">Chat With Us 💬</Button>
             </a>
           </motion.div>
         </div>
@@ -382,7 +382,7 @@ export default function ServicesPage() {
           <motion.div {...fadeUp()} className="glass rounded-2xl p-12 text-center border-brand-500/30">
             <h2 className="text-3xl font-bold text-dark-100 mb-4">Got an Idea? Let's Build It.</h2>
             <p className="text-dark-400 mb-8 max-w-lg mx-auto">
-              Whether you're launching your first product or scaling an existing one — Codevra is your tech partner in Kenya 🇰🇪
+              Whether you're launching your first product or scaling an existing one — Codevra is your tech partner.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/contact">

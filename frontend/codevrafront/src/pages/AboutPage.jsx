@@ -12,14 +12,14 @@ const timeline = [
   { year: 'The Beginning', title: 'Curiosity Sparked', description: 'Started with HTML and CSS, building simple websites. The curiosity to understand how things work under the hood drove everything forward.' },
   { year: 'The Deep Dive', title: 'Systems Thinking', description: 'Moved beyond frontend into backend systems, databases, and APIs. Started thinking in architectures, not just pages.' },
   { year: 'The Security Turn', title: 'Breaking to Build Better', description: 'Discovered cybersecurity. Learning to break systems taught how to build them stronger. OWASP, penetration testing, cryptography became core skills.' },
-  { year: 'The Mission', title: 'African Tech Futures', description: 'Realized the gap in African tech infrastructure. Started building tools and platforms specifically for the African developer ecosystem.' },
-  { year: 'Now', title: 'Codevra HQ', description: 'Building a full developer ecosystem — tools, vault, arena, tracker, and network. Not just a portfolio. A platform for African innovation.' },
+  { year: 'The Mission', title: 'Global Tech Futures', description: 'Realized the gap in tech infrastructure across emerging markets. Started building tools and platforms for developers and businesses worldwide.' },
+  { year: 'Now', title: 'Codevra HQ', description: 'Building a full developer ecosystem — tools, vault, arena, tracker, and network. Not just a portfolio. A platform for global innovation.' },
 ];
 
 const principles = [
   { icon: Shield, title: 'Build Secure by Default', description: 'Security isn\'t an afterthought. Every system is designed with defense in depth from day one.' },
   { icon: Layers, title: 'Systems > Scripts', description: 'Building interconnected systems that scale, not throwaway scripts that break.' },
-  { icon: Globe, title: 'African-First Innovation', description: 'Solving problems that matter to the continent. M-Pesa integrations, local-first solutions.' },
+  { icon: Globe, title: 'Global-First Innovation', description: 'Solving problems that matter worldwide. Payment integrations, local-first solutions for any market.' },
   { icon: Rocket, title: 'Ship Fast, Refine Faster', description: 'Launch MVPs quickly, iterate based on real feedback. Perfection is the enemy of progress.' },
 ];
 
@@ -32,7 +32,7 @@ const stats = [
 
 const differentiators = [
   { icon: Shield, title: 'Security-First Architecture', description: 'OWASP standards as implementation, not theory. Every endpoint validated, rate-limited, and threat-modeled.' },
-  { icon: Globe, title: 'African Infrastructure Focus', description: 'M-Pesa integrations. Low-bandwidth optimization. Payment reliability. Built for Africa, not just hosted in Africa.' },
+  { icon: Globe, title: 'Global Infrastructure Focus', description: 'Payment integrations. Performance optimization. Reliability at scale. Built for real-world use, not just demos.' },
   { icon: Layers, title: 'Real Systems, Not Tutorials', description: 'Secure vaults. XP engines. Role-based systems. Proposal generators. Actual production architecture.' },
   { icon: Cpu, title: 'Ecosystem Thinking', description: 'Codevra isn\'t a website. It\'s a stack of interconnected products designed to scale together.' }
 ];
@@ -47,7 +47,7 @@ const methodology = [
 ];
 
 const vision = [
-  { title: 'African Dev Infrastructure Layer', description: 'Secure-by-default SaaS templates for African startups' },
+  { title: 'Global Dev Infrastructure Layer', description: 'Secure-by-default SaaS templates for startups worldwide' },
   { title: 'Dev Education Platform', description: 'Certifications focused on system thinking, not framework tutorials' },
   { title: 'Startup Co-Building Network', description: 'Connect technical co-founders with validated ideas' },
   { title: 'AI-Assisted SaaS Builder', description: 'Generate production-ready backends with security baked in' }
@@ -62,10 +62,10 @@ const currentFocus = [
 ];
 
 const audience = [
-  { icon: Rocket, title: 'Startups', description: 'Need secure MVPs with M-Pesa integration and African payment rails.' },
+  { icon: Rocket, title: 'Startups', description: 'Need secure MVPs with payment integration and reliable infrastructure.' },
   { icon: Users, title: 'Founders', description: 'Need system architects who think in infrastructure, not freelancers who copy-paste.' },
   { icon: Code2, title: 'Developers', description: 'Want to level up from "framework user" to "system thinker".' },
-  { icon: TrendingUp, title: 'Investors', description: 'Looking for African SaaS infrastructure builders with technical depth.' }
+  { icon: TrendingUp, title: 'Investors', description: 'Looking for SaaS infrastructure builders with technical depth and global reach.' }
 ];
 
 export default function AboutPage() {
@@ -86,7 +86,7 @@ export default function AboutPage() {
             <span className="gradient-text">A Systems Builder.</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="text-lg text-dark-400 max-w-2xl mx-auto">
-            Building secure, scalable systems that solve real problems. Focused on African tech innovation and developer empowerment.
+            Building secure, scalable systems that solve real problems. Focused on global tech innovation and developer empowerment.
           </motion.p>
         </div>
       </section>
@@ -116,16 +116,16 @@ export default function AboutPage() {
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="glass rounded-xl p-8 space-y-5">
             <p className="text-dark-200 text-lg font-semibold">
-              Codevra was started because Kenyan businesses were paying international dev rates for systems that didn't understand local infrastructure.
+              Codevra was started because businesses were overpaying for systems that didn't understand their actual infrastructure needs.
             </p>
             <p className="text-dark-400 leading-relaxed">
-              M-Pesa integrations that broke. School systems built on spreadsheets. Logistics companies running on WhatsApp groups. Businesses that needed real software but couldn't afford a London agency or trust a random Fiverr freelancer.
+              Payment integrations that broke. School systems built on spreadsheets. Logistics companies running on chat groups. Businesses that needed real software but couldn't afford a big agency or trust a random freelancer.
             </p>
             <p className="text-dark-400 leading-relaxed">
               We've built logistics platforms that cut delivery delays by 30%. School systems that moved 1,200 students off paper. Payment dashboards that saved founders 5 days of manual accounting every month.
             </p>
             <p className="text-brand-300 font-semibold text-lg">
-              We build for Africa. We price for Africa. We understand the infrastructure, the payment rails, and the real problems.
+              We build for real businesses. We price fairly. We understand the infrastructure, the payment rails, and the real problems.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-dark-700/30">
               {[
@@ -160,10 +160,10 @@ export default function AboutPage() {
               Copy-paste culture dominates. Tutorials teach syntax, not architecture. Security is an afterthought. Payments are "someone else's problem."
             </p>
             <p className="text-dark-400 leading-relaxed">
-              In African tech ecosystems, this gap is even wider. M-Pesa integrations break. Infrastructure is fragile. Mentorship is scarce. Developers ship features but ignore threat models.
+              Across many tech ecosystems, this gap is wide. Payment integrations break. Infrastructure is fragile. Mentorship is scarce. Developers ship features but ignore threat models.
             </p>
             <p className="text-brand-300 font-semibold text-lg">
-              Codevra exists to close that gap — especially where infrastructure, payments, and security demand a different level of thinking.
+              Codevra exists to close that gap — wherever infrastructure, payments, and security demand a different level of thinking.
             </p>
           </motion.div>
         </div>
@@ -304,7 +304,7 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
             <h2 className="text-3xl font-bold text-dark-100 mb-4">The <span className="gradient-text">10-Year Vision</span></h2>
-            <p className="text-dark-400">Building infrastructure for African builders</p>
+            <p className="text-dark-400">Building infrastructure for builders worldwide</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {vision.map((item, i) => (
@@ -386,7 +386,7 @@ export default function AboutPage() {
               <div className="pl-4"><span className="text-dark-300">backend:</span> <span className="text-accent-400">["Node.js", "Express", "PostgreSQL", "Redis"]</span>,</div>
               <div className="pl-4"><span className="text-dark-300">security:</span> <span className="text-red-400">["AES-256", "JWT", "bcrypt", "OWASP"]</span>,</div>
               <div className="pl-4"><span className="text-dark-300">deploy:</span> <span className="text-yellow-400">["Vercel", "Railway", "Docker", "Cloudflare"]</span>,</div>
-              <div className="pl-4"><span className="text-dark-300">mission:</span> <span className="text-brand-300">"Building African Tech Futures"</span></div>
+              <div className="pl-4"><span className="text-dark-300">mission:</span> <span className="text-brand-300">"Building Global Tech Futures"</span></div>
               <div><span className="text-dark-400">{'}'}</span>;</div>
             </div>
           </motion.div>

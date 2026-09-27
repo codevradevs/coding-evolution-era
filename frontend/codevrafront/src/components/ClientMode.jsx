@@ -4,11 +4,11 @@ import { Button } from '../components/ui/Button';
 import { Shield, CheckCircle, ArrowRight, Zap, TrendingUp, Target, Users } from 'lucide-react';
 
 const services = [
-  { name: 'Business Website', price: 'KES 28,000' },
-  { name: 'E-Commerce Store', price: 'KES 135,000' },
-  { name: 'SaaS Platform', price: 'KES 250,000' },
-  { name: 'M-Pesa Integration', price: 'KES 15,000' },
-  { name: 'Security Audit', price: 'KES 10,000' }
+  { name: 'Business Website', price: '$220' },
+  { name: 'E-Commerce Store', price: '$1,050' },
+  { name: 'SaaS Platform', price: '$1,950' },
+  { name: 'Payment Integration', price: '$120' },
+  { name: 'Security Audit', price: '$80' }
 ];
 
 const metrics = [
@@ -63,7 +63,7 @@ export default function ClientMode() {
             <h2 className="text-4xl font-bold text-dark-100 mb-4">
               Transparent <span className="gradient-text">Pricing</span>
             </h2>
-            <p className="text-dark-400">Kenyan market pricing. No hidden fees.</p>
+            <p className="text-dark-400">Transparent pricing. No hidden fees.</p>
           </motion.div>
           <div className="glass rounded-xl p-8">
             <div className="space-y-4">
@@ -206,7 +206,7 @@ export default function ClientMode() {
             <Target className="w-12 h-12 text-brand-400 mx-auto mb-6" />
             <h2 className="text-3xl font-bold text-dark-100 mb-4">Ready to Build Your System?</h2>
             <p className="text-dark-400 mb-8 max-w-lg mx-auto">
-              Get a free consultation and see how we build secure, scalable systems for African businesses.
+              Get a free consultation and see how we build secure, scalable systems for businesses worldwide.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/contact">

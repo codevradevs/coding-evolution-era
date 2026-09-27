@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sir Elijah Gachoka — Founder & Lead Engineer, Codevra</title>
+  <meta name="description" content="Building the future of African tech, one line of code at a time.">
+  <meta name="author" content="Sir Elijah Gachoka">
+  <meta property="og:title" content="Sir Elijah Gachoka — Founder & Lead Engineer, Codevra">
+  <meta property="og:description" content="Building the future of African tech, one line of code at a time.">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #020617;
+      --bg-secondary: #0f172a;
+      --bg-card: #1e293b;
+      --text-primary: #f0fdf4;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-green: #22c55e;
+      --accent-green-light: #4ade80;
+      --accent-purple: #a855f7;
+      --accent-purple-light: #c084fc;
+      --border: rgba(34, 197, 94, 0.1);
+      --glow: rgba(34, 197, 94, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-green);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-green-light);
+    }
+
+    /* Selection */
+    ::selection {
+      background: var(--accent-green);
+      color: var(--bg-primary);
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      background: rgba(2, 6, 23, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+      color: var(--accent-green-light);
+      text-shadow: 0 0 20px var(--glow);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-green);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent-green);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0a1628 100%);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(34, 197, 94, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 197, 94, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: grid-move 20s linear infinite;
+    }
+
+    @keyframes grid-move {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, var(--glow) 0%, transparent 70%);
+      animation: glow-pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.6; transform: translateX(-50%) scale(1.1); }
+    }
+
+    .hero-content {
+      text-align: center;
+      z-index: 2;
+      position: relative;
+      max-width: 800px;
+      padding: 0 2rem;
+      animation: fade-in-up 1s ease-out;
+    }
+
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-portrait {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      border: 4px solid var(--accent-green);
+      box-shadow: 0 0 40px var(--glow);
+      animation: float 6s ease-in-out infinite;
+      object-fit: cover;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 3s ease-in-out infinite;
+    }
+
+    @keyframes gradient-shift {
+      0%, 100% { filter: hue-rotate(0deg); }
+      50% { filter: hue-rotate(10deg); }
+    }
+
+    .hero .subtitle {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .hero .tagline {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-green-light));
+      color: var(--bg-primary);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent-green);
+      border: 2px solid var(--accent-green);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-green);
+      color: var(--bg-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.2);
+    }
+
+    /* About Section */
+    .about {
+      padding: 8rem 2rem;
+      background: var(--bg-secondary);
+      position: relative;
+    }
+
+    .about::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(168, 85, 247, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168, 85, 247, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 4rem;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-image {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .about-image:hover {
+      transform: scale(1.05);
+    }
+
+    .about-content h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--accent-green);
+    }
+
+    .about-content p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(34, 197, 94, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.1);
+    }
+
+    .stat-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      display: block;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Projects Section */
+    .projects {
+      padding: 8rem 2rem;
+      background: var(--bg-primary);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 3rem;
+      margin-top: 4rem;
+    }
+
+    .project-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .project-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 60px rgba(34, 197, 94, 0.1);
+      border-color: var(--accent-green);
+    }
+
+    .project-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover .project-image {
+      transform: scale(1.1);
+    }
+
+    .project-content {
+      padding: 2rem;
+    }
+
+    .project-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--accent-green);
+    }
+
+    .project-description {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .project-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tech-tag {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--accent-green);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .project-link {
+      color: var(--accent-purple);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .project-link:hover {
+      color: var(--accent-purple-light);
+      text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+    }
+
+    /* Tech Stack Section */
+    .tech-stack {
+      padding: 8rem 2rem;
+      background: var(--bg-secondary);
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 4rem;
+    }
+
+    .tech-category {
+      background: rgba(34, 197, 94, 0.03);
+      padding: 2rem;
+      border-radius: 15px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .tech-category:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-green);
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.1);
+    }
+
+    .tech-category h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--accent-green);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tech-item {
+      background: rgba(168, 85, 247, 0.1);
+      color: var(--accent-purple);
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Contact Section */
+    .contact {
+      padding: 8rem 2rem;
+      background: var(--bg-primary);
+      text-align: center;
+    }
+
+    .contact-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .about-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Scroll Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">CODEVRA</a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#tech">Tech Stack</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <img src="images/hero-portrait.jpg" alt="Sir Elijah Gachoka" class="hero-portrait">
+      <h1>Sir Elijah Gachoka</h1>
+      <p class="subtitle">Founder & Lead Engineer, Codevra</p>
+      <p class="tagline">Building the future of African tech, one line of code at a time.</p>
+      <div class="cta-buttons">
+        <a href="#projects" class="btn btn-primary">Explore Solutions</a>
+        <a href="#contact" class="btn btn-secondary">Partner with Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="container">
+      <h2 class="section-title fade-in">THE VISIONARY</h2>
+      <div class="about-grid">
+        <div class="fade-in">
+          <img src="images/engineer-portrait.jpg" alt="Sir Elijah at Codevra HQ" class="about-image">
+        </div>
+        <div class="about-content fade-in">
+          <h3>Architecting Solutions for Africa</h3>
+          <p>
+            As the founder of Codevra, I'm passionate about building revolutionary platforms that solve real African problems. 
+            With expertise in full-stack development and a vision for scalable solutions, I lead a team dedicated to 
+            creating technology that empowers businesses and transforms lives across the continent.
+          </p>
+          <p>
+            From Barberia's salon management system to MediQueue's healthcare solutions and SkillSprint's learning platform, 
+            every project reflects our commitment to excellence, innovation, and user-centered design.
+          </p>
+        </div>
+      </div>
+      
+      <div class="stats fade-in">
+        <div class="stat">
+          <span class="stat-number">5+</span>
+          <span class="stat-label">Years Innovating</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">50+</span>
+          <span class="stat-label">Solutions Built</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Client Satisfaction</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">24/7</span>
+          <span class="stat-label">Innovation Mode</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section class="projects" id="projects">
+    <div class="container">
+      <h2 class="section-title fade-in">CODEVRA SOLUTIONS</h2>
+      <div class="projects-grid">
+        <div class="project-card fade-in">
+          <img src="images/project-barberia.jpg" alt="Barberia Project" class="project-image">
+          <div class="project-content">
+            <h3 class="project-title">Barberia</h3>
+            <p class="project-description">
+              Revolutionary salon management system with appointment booking, client management, 
+              and business analytics. Built for modern African salons.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">React</span>
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">MongoDB</span>
+              <span class="tech-tag">Socket.IO</span>
+            </div>
+            <a href="#" class="project-link">View Project →</a>
+          </div>
+        </div>
+
+        <div class="project-card fade-in">
+          <img src="images/project-mediqueue.jpg" alt="MediQueue Project" class="project-image">
+          <div class="project-content">
+            <h3 class="project-title">MediQueue</h3>
+            <p class="project-description">
+              Smart healthcare queue management system that reduces waiting times and improves 
+              patient experience in African healthcare facilities.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">React</span>
+              <span class="tech-tag">Express</span>
+              <span class="tech-tag">MongoDB</span>
+              <span class="tech-tag">Real-time</span>
+            </div>
+            <a href="#" class="project-link">View Project →</a>
+          </div>
+        </div>
+
+        <div class="project-card fade-in">
+          <img src="images/project-skillsprint.jpg" alt="SkillSprint Project" class="project-image">
+          <div class="project-content">
+            <h3 class="project-title">SkillSprint</h3>
+            <p class="project-description">
+              Comprehensive learning platform designed to upskill African developers with 
+              modern web technologies and industry best practices.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">React 18</span>
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">MongoDB</span>
+              <span class="tech-tag">AI-Powered</span>
+            </div>
+            <a href="#" class="project-link">View Project →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack Section -->
+  <section class="tech-stack" id="tech">
+    <div class="container">
+      <h2 class="section-title fade-in">THE CODEVRA STACK</h2>
+      <div class="tech-grid">
+        <div class="tech-category fade-in">
+          <h4>Frontend Mastery</h4>
+          <div class="tech-list">
+            <span class="tech-item">React 18</span>
+            <span class="tech-item">JavaScript ES6+</span>
+            <span class="tech-item">Tailwind CSS</span>
+            <span class="tech-item">Framer Motion</span>
+            <span class="tech-item">Vite</span>
+          </div>
+        </div>
+
+        <div class="tech-category fade-in">
+          <h4>Backend Excellence</h4>
+          <div class="tech-list">
+            <span class="tech-item">Node.js</span>
+            <span class="tech-item">Express.js</span>
+            <span class="tech-item">MongoDB Atlas</span>
+            <span class="tech-item">JWT Auth</span>
+            <span class="tech-item">Socket.IO</span>
+          </div>
+        </div>
+
+        <div class="tech-category fade-in">
+          <h4>Cloud & DevOps</h4>
+          <div class="tech-list">
+            <span class="tech-item">AWS</span>
+            <span class="tech-item">Vercel</span>
+            <span class="tech-item">Docker</span>
+            <span class="tech-item">Git</span>
+            <span class="tech-item">CI/CD</span>
+          </div>
+        </div>
+
+        <div class="tech-category fade-in">
+          <h4>Design & UX</h4>
+          <div class="tech-list">
+            <span class="tech-item">Figma</span>
+            <span class="tech-item">Adobe XD</span>
+            <span class="tech-item">Responsive Design</span>
+            <span class="tech-item">User Research</span>
+            <span class="tech-item">Accessibility</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <h2 class="section-title fade-in">Connect with Codevra</h2>
+      <div class="contact-content fade-in">
+        <p>Ready to build the future of African tech together? Let's create something extraordinary.</p>
+        <div class="cta-buttons">
+          <a href="mailto:elijah@codevra.com" class="btn btn-primary">Get in Touch</a>
+          <a href="#projects" class="btn btn-secondary">View Our Work</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 Codevra. Built with passion by Sir Elijah Gachoka. Kenya & Beyond.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all fade-in elements
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Navbar background on scroll
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 100) {
+        navbar.style.background = 'rgba(2, 6, 23, 0.95)';
+      } else {
+        navbar.style.background = 'rgba(2, 6, 23, 0.8)';
+      }
+    });
+
+    // Add some interactive hover effects
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-10px) scale(1.02)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+
+    // Typing effect for the tagline (optional enhancement)
+    const tagline = document.querySelector('.tagline');
+    const text = tagline.textContent;
+    tagline.textContent = '';
+    
+    let i = 0;
+    const typeWriter = () => {
+      if (i < text.length) {
+        tagline.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 50);
+      }
+    };
+    
+    // Start typing effect after a delay
+    setTimeout(typeWriter, 1500);
+  </script>
+</body>
+</html>

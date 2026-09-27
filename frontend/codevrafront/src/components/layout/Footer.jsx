@@ -59,7 +59,7 @@ export default function Footer() {
               <img src={logo} alt="Codevra Logo" className="w-[200px] h-auto transition-transform group-hover:scale-105" />
             </Link>
             <p className="text-dark-400 text-sm leading-relaxed mb-4 max-w-sm">
-              Integrated Digital Solutions for Kenyan Businesses. We build intelligent and secure systems for Kenyan businesses.
+              Integrated Digital Solutions for Businesses Worldwide. We build intelligent and secure systems for clients globally.
             </p>
             <div className="space-y-2 mb-6">
               <a href="mailto:hello@codevra.co.ke" className="flex items-center gap-2 text-sm text-dark-400 hover:text-brand-400 transition-colors">
@@ -70,7 +70,7 @@ export default function Footer() {
                 <Phone className="w-4 h-4" />
                 +254 140 710 690
               </a>
-              <p className="text-sm text-dark-400">Nairobi, Kenya</p>
+              <p className="text-sm text-dark-400">Remote — Worldwide</p>
             </div>
             <div className="flex items-center gap-3">
               {socialLinks.map((social) => {
@@ -140,7 +140,7 @@ export default function Footer() {
             </div>
           </div>
           <p className="flex items-center justify-center gap-1 text-xs text-dark-500">
-            Built with <Heart className="w-3 h-3 text-red-500" /> in Kenya
+            Built with <Heart className="w-3 h-3 text-red-500" /> for the World
           </p>
         </div>
       </div>

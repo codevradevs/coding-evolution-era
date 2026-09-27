@@ -9,15 +9,15 @@ import DeveloperMode from '../components/DeveloperMode';
 import api from '../lib/api';
 
 const webHighlights = [
-  { icon: '🪶', title: 'Basic Website', range: 'KES 10K – 50K' },
-  { icon: '🛒', title: 'E-Commerce Store', range: 'KES 60K – 500K' },
-  { icon: '🧠', title: 'Custom Web App', range: 'KES 150K – 1.5M+' },
+  { icon: '🪶', title: 'Basic Website', range: '$75 – $390' },
+  { icon: '🛒', title: 'E-Commerce Store', range: '$460 – $3,900' },
+  { icon: '🧠', title: 'Custom Web App', range: '$1,150 – $11,600+' },
 ];
 
 const appHighlights = [
-  { icon: '🪶', title: 'MVP App', range: 'KES 80K – 250K' },
-  { icon: '🚚', title: 'On-Demand App', range: 'KES 300K – 1M+' },
-  { icon: '💳', title: 'Fintech App', range: 'KES 120K – 2M+' },
+  { icon: '🪶', title: 'MVP App', range: '$620 – $1,950' },
+  { icon: '🚚', title: 'On-Demand App', range: '$2,300 – $7,700+' },
+  { icon: '💳', title: 'Fintech App', range: '$930 – $15,500+' },
 ];
 
 export default function HomePage() {
@@ -46,7 +46,7 @@ export default function HomePage() {
           >
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-brand text-brand-400 text-xs font-medium text-center">
               <Zap className="w-3.5 h-3.5 shrink-0" />
-              M-Pesa Integration · Bank-Level Security · African Innovation
+              Payment Integration · Bank-Level Security · Global Innovation
             </span>
           </motion.div>
 
@@ -58,7 +58,7 @@ export default function HomePage() {
           >
             <span className="gradient-text">Secure, Scalable Digital Systems</span>
             <br />
-            <span className="text-dark-100">Built in Africa.</span>
+            <span className="text-dark-100">Built for the World.</span>
           </motion.h1>
 
           <motion.p
@@ -80,9 +80,9 @@ export default function HomePage() {
             {[
               { value: '10+', label: 'Systems Delivered' },
               { value: '3', label: 'Industries Served' },
-              { value: '100%', label: 'M-Pesa Integrated' },
-              { value: 'KES 80K+', label: 'Saved for Clients' },
-              { value: 'Built in Kenya 🇰🇪', label: 'African-First' },
+              { value: '100%', label: 'Payment Integrated' },
+              { value: '$600+', label: 'Saved for Clients' },
+              { value: 'Global Clients', label: 'Worldwide Reach' },
             ].map(s => (
               <div key={s.label} className="text-center">
                 <div className="text-lg font-bold text-dark-100">{s.value}</div>
@@ -186,7 +186,7 @@ export default function HomePage() {
               What We <span className="gradient-text">Build</span>
             </h2>
             <p className="text-dark-400 max-w-2xl mx-auto">
-              From simple websites to full-scale mobile apps — Kenyan market pricing, no hidden fees.
+              From simple websites to full-scale mobile apps — transparent pricing, no hidden fees.
             </p>
           </motion.div>
 
@@ -345,15 +345,15 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                quote: "Codevra built our entire logistics platform in under 6 weeks. M-Pesa integration worked flawlessly from day one. Delivery delays dropped by 30% in the first month.",
+                quote: "Codevra built our entire logistics platform in under 6 weeks. Payment integration worked flawlessly from day one. Delivery delays dropped by 30% in the first month.",
                 name: "James M.",
                 role: "CEO, Tranzit Logistics",
                 emoji: "🚚",
               },
               {
                 quote: "Our school was drowning in paper. SchoolSync changed everything — fee collection, results, parent communication. The team understood exactly what we needed.",
-                name: "Principal Wanjiku",
-                role: "Nairobi Private Secondary School",
+                name: "Principal Sarah W.",
+                role: "Private Secondary School",
                 emoji: "🏫",
               },
               {
