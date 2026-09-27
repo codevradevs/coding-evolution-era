@@ -23,15 +23,15 @@ const socialLinks = [
   { icon: Mail, label: 'Email', href: 'mailto:hello@codevra.co.ke', handle: 'hello@codevra.co.ke' },
 ];
 
-const projectTypes = ['SaaS Platform', 'E-Commerce', 'Web Application', 'Mobile App', 'API / Backend', 'Security Audit', 'M-Pesa Integration', 'Other'];
-const budgetRanges = ['Under KES 30,000', 'KES 30,000 - 100,000', 'KES 100,000 - 300,000', 'KES 300,000 - 600,000', 'KES 600,000+', "Let's discuss"];
+const projectTypes = ['SaaS Platform', 'E-Commerce', 'Web Application', 'Mobile App', 'API / Backend', 'Security Audit', 'Payment Integration', 'Other'];
+const budgetRanges = ['Under $250', '$250 - $800', '$800 - $2,500', '$2,500 - $5,000', '$5,000+', "Let's discuss"];
 const timelines = ['ASAP', '1-2 weeks', '1 month', '2-3 months', 'Flexible'];
 
 const faqs = [
   { q: 'How fast can you start?', a: 'Most projects kick off within 3-5 business days after the initial consultation and deposit.' },
-  { q: 'Do you work with international clients?', a: 'Yes. We work with clients across Africa and internationally. Payments via M-Pesa, bank transfer, or Wise.' },
+  { q: 'Do you work with international clients?', a: 'Yes. We work with clients globally. Payments via Stripe, bank transfer, or Wise.' },
   { q: 'What tech stack do you use?', a: 'We are tech-agnostic — we build with whatever stack best fits your project, budget, and team. From React to Vue, Node.js to Laravel, MySQL to MongoDB, Flutter to React Native. We recommend the right tool for the job, not the other way around.' },
-  { q: 'How do payments work?', a: '50% deposit to start, 50% on delivery. M-Pesa, bank transfer, or Wise accepted.' },
+  { q: 'How do payments work?', a: '50% deposit to start, 50% on delivery. Stripe, bank transfer, or Wise accepted.' },
 ];
 
 export default function ContactPage() {
@@ -114,11 +114,11 @@ export default function ContactPage() {
             Let's Build <span className="gradient-text">Something Great.</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg text-dark-400 max-w-2xl mx-auto mb-4">
-            Secure, scalable systems for African businesses. Book a free 30-min consultation or send us your project details.
+            Secure, scalable systems for businesses worldwide. Book a free 30-min consultation or send us your project details.
           </motion.p>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-sm text-dark-500 flex items-center justify-center gap-2">
             <Clock className="w-3.5 h-3.5 text-brand-400" />
-            We reply within 24 hours · Trusted by African startups
+            We reply within 24 hours · Trusted by clients worldwide
           </motion.p>
         </div>
       </section>

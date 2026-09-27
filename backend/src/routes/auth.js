@@ -124,7 +124,32 @@ router.post('/refresh', async (req, res) => {
 
 // ─── Password Reset ───────────────────────────────────────────────────────────
 
-router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
+router.post('/admin-forgot-password', forgotPasswordLimiter, async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const user = await User.findOne({ email: email.toLowerCase(), role: 'admin' });
+    if (!user || user.provider !== 'local') {
+      return res.json({ message: 'If that admin email exists, a reset link was sent' });
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    user.resetToken = token;
+    user.resetTokenExpiry = new Date(Date.now() + 15 * 60 * 1000);
+    await user.save();
+
+    const adminUrl = process.env.ADMIN_URL || 'https://admin.codevra.co.ke';
+    const resetLink = `${adminUrl}/reset-password/${token}`;
+    await sendPasswordResetEmail({ name: user.name, email: user.email, resetLink });
+
+    res.json({ message: 'If that admin email exists, a reset link was sent' });
+  } catch {
+    res.status(500).json({ error: 'Failed to process request' });
+  }
+});
+
+
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required' });

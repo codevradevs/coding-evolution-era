@@ -26,8 +26,9 @@ api.interceptors.response.use(
 )
 
 export const adminApi = {
-  login:   (email, password) => api.post('/auth/login', { email, password }),
-  refresh: (refreshToken)    => api.post('/auth/refresh', { refreshToken }),
+  login:          (email, password) => api.post('/auth/login', { email, password }),
+  refresh:         (refreshToken)    => api.post('/auth/refresh', { refreshToken }),
+  forgotPassword:  (email)           => api.post('/auth/admin-forgot-password', { email }),
 
   // Users (via /api/users)
   getUsers:       (params = {}) => api.get('/users', { params }),
