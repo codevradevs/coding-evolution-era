@@ -51,9 +51,9 @@ export default function ProjectsPage() {
             className="flex flex-wrap items-center justify-center gap-6">
             {[
               { value: loading ? '...' : `${projects.length}+`, label: 'Systems Delivered' },
-              { value: 'KES 80K+', label: 'Saved for Clients' },
+              { value: '$600+', label: 'Saved for Clients' },
               { value: '3 Industries', label: 'Logistics · Education · Fintech' },
-              { value: '100%', label: 'M-Pesa Integrated' },
+              { value: '100%', label: 'Payment Integrated' },
             ].map(s => (
               <div key={s.label} className="text-center">
                 <div className="text-2xl font-bold gradient-text">{s.value}</div>

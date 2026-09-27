@@ -34,6 +34,10 @@ import Chatbot from './components/Chatbot';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ServicesPage from './pages/ServicesPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
+import WebDevelopmentPage from './pages/WebDevelopmentPage';
+import MobileAppDevelopmentPage from './pages/MobileAppDevelopmentPage';
+import AIDevelopmentPage from './pages/AIDevelopmentPage';
+import { EducationSolutionPage, HealthcareSolutionPage, RetailSolutionPage, FinanceSolutionPage, LogisticsSolutionPage, StartupsSolutionPage } from './pages/SolutionPages';
 import './index.css';
 
 function ScrollToTop() {
@@ -82,6 +86,17 @@ function App() {
               <Route path="/auth/login" element={<AuthPage />} />
               <Route path="/auth/register" element={<AuthPage />} />
               <Route path="/auth/callback" element={<AuthCallbackPage />} />
+              {/* Service landing pages */}
+              <Route path="/web-development" element={<WebDevelopmentPage />} />
+              <Route path="/mobile-app-development" element={<MobileAppDevelopmentPage />} />
+              <Route path="/ai-development" element={<AIDevelopmentPage />} />
+              {/* Solution pages */}
+              <Route path="/solutions/education" element={<EducationSolutionPage />} />
+              <Route path="/solutions/healthcare" element={<HealthcareSolutionPage />} />
+              <Route path="/solutions/retail" element={<RetailSolutionPage />} />
+              <Route path="/solutions/finance" element={<FinanceSolutionPage />} />
+              <Route path="/solutions/logistics" element={<LogisticsSolutionPage />} />
+              <Route path="/solutions/startups" element={<StartupsSolutionPage />} />
             </Routes>
           </main>
           <Footer />

@@ -4,7 +4,7 @@ import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
 import {
   Menu, X, Home, User, FolderKanban, BookOpen, Mail,
-  Wrench, Lock, Gamepad2, TrendingUp, Globe, LogIn, LogOut, Lightbulb, Sparkles, Code2, Trophy, Briefcase
+  Wrench, Lock, Gamepad2, TrendingUp, Globe, LogIn, LogOut, Lightbulb, Sparkles, Code2, Trophy, Briefcase, Building2
 } from 'lucide-react';
 import logo from '../../logo.png';
 
@@ -29,13 +29,27 @@ const ecosystemLinks = [
   { href: '/rankings', label: 'Rankings', icon: Trophy },
 ];
 
+const solutionLinks = [
+  { href: '/solutions/startups', label: 'Startups' },
+  { href: '/solutions/education', label: 'Education' },
+  { href: '/solutions/healthcare', label: 'Healthcare' },
+  { href: '/solutions/retail', label: 'Retail & E-Commerce' },
+  { href: '/solutions/finance', label: 'Finance & Fintech' },
+  { href: '/solutions/logistics', label: 'Logistics' },
+  { href: '/web-development', label: 'Web Development' },
+  { href: '/mobile-app-development', label: 'Mobile Apps' },
+  { href: '/ai-development', label: 'AI Development' },
+];
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [ecosystemOpen, setEcosystemOpen] = useState(false);
+  const [solutionsOpen, setSolutionsOpen] = useState(false);
   const location = useLocation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const solutionsRef = useRef(null);
 
   const handleLogout = async () => {
     await logout();
@@ -46,6 +60,9 @@ export default function Navbar() {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setEcosystemOpen(false);
+      }
+      if (solutionsRef.current && !solutionsRef.current.contains(event.target)) {
+        setSolutionsOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -80,6 +97,37 @@ export default function Navbar() {
                 </Link>
               );
             })}
+
+            {/* Solutions dropdown */}
+            <div className="relative" ref={solutionsRef}>
+              <button
+                onClick={() => setSolutionsOpen(!solutionsOpen)}
+                className={cn(
+                  'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                  location.pathname.startsWith('/solutions') || ['/web-development','/mobile-app-development','/ai-development'].includes(location.pathname)
+                    ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20'
+                    : 'text-dark-300 hover:text-dark-100 hover:bg-dark-800/50'
+                )}
+              >
+                <Building2 className="w-4 h-4" />
+                Solutions
+                <svg className={cn('w-3 h-3 transition-transform', solutionsOpen && 'rotate-180')} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {solutionsOpen && (
+                <div className="absolute top-full left-0 mt-2 w-56 glass rounded-xl p-2 shadow-2xl z-50">
+                  {solutionLinks.map((link) => (
+                    <Link key={link.href} to={link.href} onClick={() => setSolutionsOpen(false)}
+                      className={cn('flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-all duration-200',
+                        location.pathname === link.href ? 'bg-brand-500/10 text-brand-400' : 'text-dark-300 hover:text-dark-100 hover:bg-dark-800/50'
+                      )}>
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <div className="relative" ref={dropdownRef}>
               <button

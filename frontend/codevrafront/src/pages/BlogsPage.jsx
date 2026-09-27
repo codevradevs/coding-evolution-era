@@ -67,7 +67,7 @@ export default function BlogsPage() {
               Insights. Breakdowns. <span className="gradient-text">Build Logs.</span>
             </h1>
             <p className="text-dark-400 text-lg max-w-2xl mx-auto mb-8">
-              Security deep dives, African tech insights, and honest build logs. Written for developers who build real systems.
+              Engineering deep dives, AI integration guides, and honest build logs. Written for developers and founders who build real systems.
             </p>
             
             <div className="relative max-w-xl mx-auto">

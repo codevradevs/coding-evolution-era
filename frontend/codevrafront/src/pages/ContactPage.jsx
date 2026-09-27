@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../components/ui/Button';
-import { Mail, Briefcase, Send, MessageSquare, Clock, DollarSign, FileText, CheckCircle, Phone, Instagram, Facebook, Github, Shield, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { Mail, Briefcase, Send, MessageSquare, Clock, DollarSign, FileText, CheckCircle, Phone, Instagram, Facebook, Github, Shield, ChevronDown, ChevronUp, ExternalLink, ArrowRight, Zap } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { contactApi } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
@@ -33,6 +33,132 @@ const faqs = [
   { q: 'What tech stack do you use?', a: 'We are tech-agnostic — we build with whatever stack best fits your project, budget, and team. From React to Vue, Node.js to Laravel, MySQL to MongoDB, Flutter to React Native. We recommend the right tool for the job, not the other way around.' },
   { q: 'How do payments work?', a: '50% deposit to start, 50% on delivery. Stripe, bank transfer, or Wise accepted.' },
 ];
+
+const estimatorSteps = [
+  {
+    key: 'type',
+    question: 'What do you want to build?',
+    options: ['Website', 'E-Commerce', 'Mobile App', 'SaaS', 'Business Management System', 'AI Solution', 'Other'],
+  },
+  {
+    key: 'budget',
+    question: "What's your approximate budget?",
+    options: ['Under $1,000', '$1,000 – $3,000', '$3,000 – $10,000', '$10,000+'],
+  },
+  {
+    key: 'timeline',
+    question: 'When do you want to launch?',
+    options: ['ASAP', '1–3 months', '3–6 months', 'Flexible'],
+  },
+];
+
+function ProjectEstimator() {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [lead, setLead] = useState({ name: '', email: '', whatsapp: '', description: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const current = estimatorSteps[step];
+  const isLeadStep = step === estimatorSteps.length;
+
+  const select = (val) => {
+    setAnswers(prev => ({ ...prev, [current.key]: val }));
+    setStep(s => s + 1);
+  };
+
+  const handleLeadSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await contactApi.sendMessage({
+        name: lead.name,
+        email: lead.email,
+        subject: `Estimator Lead: ${answers.type}`,
+        message: `Type: ${answers.type}\nBudget: ${answers.budget}\nTimeline: ${answers.timeline}\nWhatsApp: ${lead.whatsapp}\n\n${lead.description}`,
+      });
+      setSubmitted(true);
+    } catch {
+      setSubmitted(true); // still show success to not block UX
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section className="relative px-4 pb-12">
+      <div className="max-w-3xl mx-auto">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="glass rounded-2xl p-8 border border-brand-500/20">
+          <div className="flex items-center gap-2 mb-6">
+            <Zap className="w-5 h-5 text-brand-400" />
+            <h2 className="text-xl font-bold text-dark-100">Project Estimator</h2>
+            <span className="ml-auto text-xs text-dark-500">{Math.min(step, estimatorSteps.length)}/{estimatorSteps.length} steps</span>
+          </div>
+
+          {/* Progress bar */}
+          <div className="w-full h-1 bg-dark-800 rounded-full mb-8">
+            <div className="h-full bg-brand-500 rounded-full transition-all duration-500" style={{ width: `${(Math.min(step, estimatorSteps.length) / estimatorSteps.length) * 100}%` }} />
+          </div>
+
+          <AnimatePresence mode="wait">
+            {submitted ? (
+              <motion.div key="done" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-6">
+                <CheckCircle className="w-12 h-12 text-brand-400 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-dark-100 mb-2">We'll be in touch!</h3>
+                <p className="text-dark-400 text-sm">Based on your answers, we'll prepare a rough estimate and reach out within 24 hours.</p>
+              </motion.div>
+            ) : !isLeadStep ? (
+              <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <p className="text-lg font-semibold text-dark-100 mb-6">{current.question}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {current.options.map(opt => (
+                    <button key={opt} onClick={() => select(opt)}
+                      className="px-4 py-3 rounded-xl glass text-sm text-dark-300 hover:text-brand-400 hover:border-brand-500/30 transition-all text-left font-medium">
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            ) : (
+              <motion.form key="lead" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} onSubmit={handleLeadSubmit} className="space-y-4">
+                <p className="text-lg font-semibold text-dark-100 mb-2">Almost there — where should we send your estimate?</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-dark-400 mb-1">Name *</label>
+                    <input required type="text" value={lead.name} onChange={e => setLead(p => ({ ...p, name: e.target.value }))} placeholder="Your name" className="w-full px-3 py-2.5 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-dark-400 mb-1">Email *</label>
+                    <input required type="email" value={lead.email} onChange={e => setLead(p => ({ ...p, email: e.target.value }))} placeholder="you@example.com" className="w-full px-3 py-2.5 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-dark-400 mb-1">WhatsApp (optional)</label>
+                  <input type="tel" value={lead.whatsapp} onChange={e => setLead(p => ({ ...p, whatsapp: e.target.value }))} placeholder="+1 555 000 0000" className="w-full px-3 py-2.5 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-dark-400 mb-1">Brief project description</label>
+                  <textarea rows={3} value={lead.description} onChange={e => setLead(p => ({ ...p, description: e.target.value }))} placeholder="Tell us a bit more about what you need..." className="w-full px-3 py-2.5 rounded-lg bg-dark-800/50 border border-dark-700/50 text-dark-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 resize-none" />
+                </div>
+                <div className="flex gap-3">
+                  <button type="button" onClick={() => setStep(s => s - 1)} className="px-4 py-2.5 rounded-lg glass text-sm text-dark-400 hover:text-dark-200 transition">Back</button>
+                  <Button type="submit" className="flex-1" disabled={loading}>
+                    <Send className="w-4 h-4" />
+                    {loading ? 'Sending...' : 'Get My Estimate'}
+                  </Button>
+                </div>
+              </motion.form>
+            )}
+          </AnimatePresence>
+
+          {!isLeadStep && !submitted && step > 0 && (
+            <button onClick={() => setStep(s => s - 1)} className="mt-4 text-xs text-dark-500 hover:text-dark-300 transition">← Back</button>
+          )}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
 
 export default function ContactPage() {
   const location = useLocation();
@@ -111,15 +237,38 @@ export default function ContactPage() {
             </span>
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-            Let's Build <span className="gradient-text">Something Great.</span>
+            Tell us what <span className="gradient-text">you're building.</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg text-dark-400 max-w-2xl mx-auto mb-4">
-            Secure, scalable systems for businesses worldwide. Book a free 30-min consultation or send us your project details.
+            Have an idea, a business problem, or an existing system that needs improvement? Tell us what you're trying to accomplish and we'll help map out the next step.
           </motion.p>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-sm text-dark-500 flex items-center justify-center gap-2">
             <Clock className="w-3.5 h-3.5 text-brand-400" />
             We reply within 24 hours · Trusted by clients worldwide
           </motion.p>
+        </div>
+      </section>
+
+      {/* Three conversion paths — item 9 */}
+      <section className="relative px-4 pb-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <a href="#form" className="glass rounded-xl p-5 text-center hover:border-brand-500/30 transition-all group">
+              <div className="text-2xl mb-2">🚀</div>
+              <div className="font-semibold text-dark-100 text-sm mb-1">Start a project</div>
+              <div className="text-xs text-dark-500">Fill in the project intake form below</div>
+            </a>
+            <a href="https://wa.me/254140710690" target="_blank" rel="noopener noreferrer" className="glass rounded-xl p-5 text-center hover:border-brand-500/30 transition-all group">
+              <div className="text-2xl mb-2">💬</div>
+              <div className="font-semibold text-dark-100 text-sm mb-1">WhatsApp us</div>
+              <div className="text-xs text-dark-500">+254 140 710 690 — quick chat</div>
+            </a>
+            <a href="https://calendly.com/codevradevs/codevra-devs-project-consultation" target="_blank" rel="noopener noreferrer" className="glass rounded-xl p-5 text-center hover:border-brand-500/30 transition-all group">
+              <div className="text-2xl mb-2">📅</div>
+              <div className="font-semibold text-dark-100 text-sm mb-1">Book a consultation</div>
+              <div className="text-xs text-dark-500">Free 30-min strategy call</div>
+            </a>
+          </div>
         </div>
       </section>
 
@@ -296,6 +445,9 @@ export default function ContactPage() {
           </AnimatePresence>
         </div>
       </section>
+
+      {/* Interactive Project Estimator — item 8 */}
+      <ProjectEstimator />
 
       {/* FAQ */}
       <section className="relative px-4 pb-20">
